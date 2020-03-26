@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>接口测试报告</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+    <script src="/static/js/pub/bootstrap-treeview.js"></script>
+
+    <style>
+        .wrap {
+            width: 90%;
+            margin: auto;
+            margin-bottom: 100px;
+            height:100%;
+        }
+        .header_nav{    /*导航部分*/
+            width: 100%;
+            height: 80px;
+            text-align: center;
+            background-color: #f1f5fb;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            /*#ffcfc4*/
+        }
+        .header_nav h2{
+            line-height: 80px;
+            margin: 0;
+        }
+        #report_choose{
+            margin-top: 23px;
+        }
+        .main{
+            margin-left: 20%;
+            margin-right: 20%;
+            margin-top: 50px;
+        }
+        .th_color{
+            background-color: #e2ebfb
+        }
+        .th_color2{
+            background-color: #f2ebfb
+        }
+        #zhe{   /*遮罩层*/
+            position: fixed;
+            width: 100%;
+            height:100%;
+            z-index: 2;
+            background-color: black;
+            opacity: 0;
+            display: none;
+        }
+        #case_detail_div{   /* 查看用例详情框*/
+            position: fixed;
+            width: 1200px;
+            top: 5%;
+            left: 50%;
+            height: 90%;
+            margin-left: -600px;
+            z-index: 9;
+            /*overflow: auto;*/
+            text-align: left;
+            /*background-color: #f1f5fb;*/
+            background-color: white;
+            display: none;
+        }
+        #get_case_detail{
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+{# 遮罩用　#}
+<div id="zhe"></div>
+<div class="wrap">
+    <div id="pop">
+        <div id="case_detail_div"></div>
+    </div>
+    <div class="header_nav">
+        <div class="report_choose_div col-sm-3">
+{#            <select id="report_choose" class="form-control">#}
+{#                <option>清选择测试报告</option>#}
+{#            </select>#}
+        </div>
+        <div class="tiele col-sm-6">
+            <h2 id="title"></h2>
+        </div>
+        <div class="Login col-sm-3">
+            <div style="line-height: 27px">执行人：<span id="tester"></span></div>
+            <div style="line-height: 27px">执行时间：<span id="report_c_date"></span></div>
+            <div style="line-height: 27px">域名：<span id="host"></span></div>
+        </div>
+    </div>
+    <div class="main">
+        <div id="statistics"></div>
+        <hr color="f2ebfb">
+        <div class="api_info" id="api_info"></div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        // 将函数里中注释转换成多行字符串
+        Function.prototype.getMultiLine = function () {
+            var lines = new String(this);
+            lines = lines.substring(lines.indexOf("/*") + 3, lines.lastIndexOf("*/"));
+            return lines;
+        };
+
+        // 格式化字符串
+        String.prototype.format = function (args) {
+            var result = this;
+            if (arguments.length > 0) {
+                if (arguments.length == 1 && typeof (args) == "object") {
+                    for (var key in args) {
+                        if (args[key] != undefined) {
+                            var reg = new RegExp("({" + key + "})", "g");
+                            result = result.replace(reg, args[key]);
+                        }
+                        else{
+                            args[key] = "";
+                            var reg = new RegExp("({)" + key + "(})", "g");
+                            result = result.replace(reg, args[key]);
+                        }
+                    }
+                }
+                else {
+                    for (var i = 0; i < arguments.length; i++) {
+                        if (arguments[i] != undefined) {
+                            //var reg = new RegExp("({[" + i + "]})", "g");//这个在索引大于9时会有问题，谢谢何以笙箫的指出
+                            var reg = new RegExp("({)" + i + "(})", "g");
+                            result = result.replace(reg, arguments[i]);
+                        }
+                        else{
+                            arguments[i] = "";
+                            var reg = new RegExp("({)" + i + "(})", "g");
+                            result = result.replace(reg, arguments[i]);
+                        }
+                    }
+                }
+            }
+            return result;
+        };
+
+        var open_zhe = function () {
+            $("#zhe").css({"opacity": "0.5"});
+            $("#zhe").css({"display": "inherit"});
+        };
+        var close_zhe = function () {
+            $("#zhe").css({"opacity": "0"});
+            $("#zhe").css({"display": "none"});
+        };
+{#        open_zhe();#}
+        // 获取最后五十条报告信息
+        var get_all_report = function () {
+            $.get("get_all_report", function (data) {
+                jsonData = $.parseJSON(data);
+                $.each(jsonData, function (index, item) {
+                    $("#report_choose").append("<option value='" + item.id + "'>" + item.title + "</option>")
+                });
+            });
+        };
+
+        // 选择报告进入新的页面
+        $("#report_choose").change(function () {
+           id = $(this).val();
+           if(id){
+               window.location.href = "./"+id;
+           }
+        });
+        var api_info_table_html = function () {
+        /*
+        <div>
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th class="th_color" width="40%">接口名称</th>
+                    <th class="th_color" width="15%">测试用例数量</th>
+                    <th class="th_color" width="15%">测试通过</th>
+                    <th class="th_color" width="15%">测试失败</th>
+                    <th class="th_color" width="15%">此接口最终结果</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="api_title"></td>
+                    <td id="case_count"></td>
+                    <td id="case_seccuss"></td>
+                    <td id="case_fail"></td>
+                    <td id="api_ret"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+         */
+    };
+
+        // 返回的测试报告数据
+        var report_data;
+        // 获取某条测试报告
+        var get_report_data = function () {
+
+            url = window.location.href;
+            url = url + "_data";
+            // 加载表格中的数据
+            $.get(url, function (data) {
+                report_data = $.parseJSON(data);
+                // 先判断是否成功获取报告数据
+                if (report_data.ret){
+                    set_tree(report_data.report_tree);
+                    set_statistics_info()
+                }
+                else{
+                    alert(jsonData.erro_msg);
+                }
+            });
+        };
+
+        var set_tree = function(tree_data){
+            $('#treeview').treeview({
+                // enableLinks:true,
+                // tree节点的字体颜色
+                    color: "#428bca",
+                // tree节点左侧的展开图标，折叠的图标，节点的图标
+                //	expandIcon: "glyphicon glyphicon-stop",
+                //	collapseIcon: "glyphicon glyphicon-unchecked",
+                //	nodeIcon: "glyphicon glyphicon-user",
+                // 是否显示标签
+                    showTags: true,
+                // tree中的数据
+                    data: tree_data,
+                // 这里设置tree的展开层级l
+                    levels:2,
+                // tree 的节点背景颜色
+                //  backColor:'aqua',
+                onNodeSelected:function(event, data) {
+                    text = $(data.text);
+                    if (text.hasClass("case")){
+                        report_detail_id = text.attr("value");
+                        if (report_detail_id){
+                            get_case_data(report_detail_id)
+                        }
+                    }
+                }
+            });
+        };
+
+        var get_case_data = function (report_detail_id) {
+
+            url = "/interface/report/get_report_detail?report_detail_id=" + report_detail_id;
+            // 加载表格中的数据
+            $.get(url, function (data) {
+                data = $.parseJSON(data);
+                // 先判断是否成功获取报告数据
+                if (data.ret){
+                    set_case_data($.parseJSON(data.case_info), report_detail_id);
+                }
+                else{
+                    alert(jsonData.erro_msg);
+                }
+            });
+        };
+
+        var set_statistics_info = function () {
+            $("#tester").html(report_data.tester);
+            $("#report_c_date").html(report_data.c_date);
+            $("#host").html(report_data.report.host);
+            $("#title").html(report_data.title);
+
+            // 总统计
+            statistics_item = report_data.report.statistics_item;
+
+            if(statistics_item.flag){
+                final_ret= "通过";
+            }else{
+                final_ret = "<span style='color:red'>未通过</span>";
+            }
+            statistics_html = "<h3><b>本此总共测试{0}个接口，通过：{1}个， 失败：<span style='color:red'>{2}</span>个，  最终结果:{3}</b></h3><br>".format(
+            statistics_item.count, statistics_item.success, statistics_item.fail, final_ret);
+            $("#statistics").append(statistics_html);
+
+            for (i in report_data.report.api_list){
+                api_info = report_data.report.api_list[i].statistics_item;
+                api_info_html = $(api_info_table_html.getMultiLine());
+                api_info_html.find("#api_title").html(report_data.report.api_list[i].title);
+                api_info_html.find("#case_count").html(api_info.count);
+                api_info_html.find("#case_seccuss").html(api_info.success);
+                if (api_info.fail > 0){
+                    str1 = "<a style='color:red' id='get_case_detail' task_id='{0}' api_id='{1}'>{2}</a>".format(
+                        report_data.task_id, report_data.report.api_list[i].id, api_info.fail
+                    );
+                    api_info_html.find("#case_fail").html(str1);
+                }else{
+                    api_info_html.find("#case_fail").html(api_info.fail);
+                }
+                if(api_info.flag){
+                    api_info_html.find("#api_ret").html("通过");
+                }else{
+                    api_info_html.find("#api_ret").html("<span style='color:red'>未通过</span>");
+                }
+
+                api_info_html2 = api_info_html.prop("outerHTML");
+                $("#api_info").append(api_info_html2);
+            }
+        };
+        // 弹出对应所有失败用例信息
+        $("#api_info").on("click", "#get_case_detail", function () {
+            task_id = $(this).attr("task_id");
+            api_id = $(this).attr("api_id");
+            from_data = {
+                task_id: task_id,
+                api_id: api_id
+            };
+            url = '/interface/report/get_case_detail';
+            //采用POST方式调用服务
+            $.get(url, from_data, function (data) {
+                jsondata = $.parseJSON(data);
+                if (jsondata.ret) {
+                    set_fail_case_detail(jsondata.datas);
+                    $("#case_detail_div").css({"display": "inherit"});
+                    open_zhe();
+                }
+                else {
+                    alert("转换失败，错误信息：\n" + jsondata.erro_msg)
+                }
+            });
+        });
+        // 关闭查看失败详情框
+        $("#pop").on("click", ".colse_case_detail_div", function () {
+            $("#case_detail_div").css({"display": "none"});
+            $("#case_detail_div").html("");
+            close_zhe();
+        });
+
+        var case_detail_html = function () {
+            /*
+            <div class="panel panel-default" style="height: 100%;">
+                <div class="panel-heading" style="height: 5%;">
+                    <h3 class="panel-title">
+                        <span id="panel-title" style="text-align: center">用例失败详情</span>
+                        <button type="button" class="close colse_case_detail_div" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </h3>
+                </div>
+                <div class="panel-body" style="height: 88%;">
+                    <div id="case_info_table" style="height: 100%; overflow-y: scroll"></div>
+                </div>
+                <div class="panel-footer" style="height: 7%;text-align: right">
+                    <button type="button" class="btn btn-primary colse_case_detail_div">返回</button>
+                </div>
+            </div>
+             */
+        };
+
+        var case_table_html = function () {
+            /*
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th colspan="6" class="th_color">
+                        用例标题:&nbsp;&nbsp;<span id="case_title"></span></th>
+                </tr>
+                <tr class="header">
+                    <td class="" width="20%"><span><strong>断言键</strong></span></td>
+                    <td class="" width="20%"><span><strong>期望结果</strong></span></td>
+                    <td class="" width="10%"><span><strong>断言方式</strong></span></td>
+                    <td class="" width="20%"><span><strong>实际结果</strong></span></td>
+                    <td class="" width="10%"><span><strong>断言结果</strong></span></td>
+                    <td class="" width="10%"><span><strong>错误信息</strong></span></td>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        */
+        };
+
+        var set_fail_case_detail = function (datas) {
+
+            case_detail_html_ = $(case_detail_html.getMultiLine());
+            for(i in datas){
+                case_table_html_ = $(case_table_html.getMultiLine());
+                case_info = $.parseJSON(datas[i]);
+                case_table_html_.find("#case_title").html(case_info.id + " -- " + case_info.title);
+                res_ret = case_info.r_data.res_ret;
+                if (res_ret){
+                    for (k in case_info.r_data.asserts) {
+                        assert = case_info.r_data.asserts[k];
+                        if(assert.assert_status == "1") {
+                            tr_text2 = '<tr>' +
+                                '<td><div><span id="assert_key"></span></div></td>' +
+                                '<td><div id="assert_expect_value"><span></span></div></td>' +
+                                '<td><div><span id="assert_method"></span></div></td>' +
+                                '<td><div><span id="assert_real_value"></span></div></td>' +
+                                '<td><div><span id="assert_ret"></span></div></td>' +
+                                '<td><div><span id="assert_erro"></span></div></td>' +
+                                '</tr>';
+                            tr_text = '<tr>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_key"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_expect_value"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_method"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_real_value"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_ret"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_erro"></td>' +
+                                '</tr>';
+                            tr = $(tr_text);
+                            tr.find("#assert_key").attr("value", assert.assert_key);
+                            tr.find("#assert_expect_value").attr("value", assert.assert_expect_value);
+                            tr.find("#assert_method").attr("value", assert.assert_method);
+                            tr.find("#assert_real_value").attr("value", assert.assert_real_value);
+                            tr.find("#assert_ret").attr("value", assert.assert_ret);
+
+                            if (assert.assert_ret) {
+                                tr.find("#assert_ret").attr("value", "验证成功");
+                            }
+                            else {
+                                tr.find("#assert_ret").attr("value", "验证失败");
+                                tr.find("#assert_erro").attr("value", assert.assert_erro);
+                                tr.find("#assert_ret").css({"color":"red"});
+                                tr.find("#assert_erro").css({"color":"red"});
+                            }
+                            tr_html = tr.prop("outerHTML");
+                            case_table_html_.find("tbody").append(tr_html);
+                        }
+                    }
+                }
+                else{
+                    tr_text = '<tr><td colspan="6">' +
+                        '<input class="form-control" style="color:red" type="text" value="'+case_info.r_data.erro_msg +'"></td></tr>';
+                    case_table_html_.find(".header").remove();
+                    case_table_html_.find("thead").append(tr_text);
+                }
+                table_html = case_table_html_.prop("outerHTML");
+                case_detail_html_.find("#case_info_table").append(table_html);
+            }
+            case_detail_html__ = case_detail_html_.prop("outerHTML");
+            $("#case_detail_div").append(case_detail_html__);
+        };
+
+        url = window.location.href;
+        list = url.split("/");
+        id = parseInt(list[list.length-1]);
+        if(id > 0){
+            get_report_data()
+        }
+        get_all_report();
+    });
+
+</script>
+
+</html>

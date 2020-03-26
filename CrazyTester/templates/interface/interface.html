@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>接口测试平台</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/interface/interface.css"/>
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+    <script src="/static/js/pub/bootstrap-treeview.js"></script>
+    <script src="/static/js/interface/interface.js"></script>
+
+</head>
+
+<body>
+    {# 遮罩用　#}
+    <div id="zhe"></div>
+
+    <div class="wrap">
+
+        {# 提示消息弹出框 #}
+        <div id="pop"></div>
+
+        {# 上传用例弹出框 #}
+        <div id="upload_case_panel" class="panel_pop" style="display: none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span id="panel-title">上传excel测试用例</span>
+                        <button type="button" class="close colse_panel_pop" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <input type="file" name="case_file" id="case_file"/>
+                </div>
+                <div class="panel-footer" style="text-align: right">
+                    <button type="button" class="btn btn-primary colse_panel_pop">返回</button>
+                    <button type="button" class="btn btn-default" id="submit_upload_case">提交</button>
+                </div>
+            </div>
+        </div>
+
+        {# 环境弹出框 #}
+        <div id="env_info_div" style="display: none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span id="panel-title" style="text-align: center">查看环境参数</span>
+                        <button type="button" class="close colse_env_info_div" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="env_info_table" style="height: 500px; overflow-y: scroll">
+                    </div>
+                </div>
+                <div class="panel-footer" style="text-align: right">
+                    <button type="button" class="btn btn-primary colse_env_info_div">返回</button>
+                </div>
+            </div>
+        </div>
+
+        {# 批量请求弹出框 #}
+        <div id="batch_test_pop" style="display: none;;">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span id="panel-title" style="text-align: center">批量请求</span>
+                        <button type="button" class="close close_batch_test_pop" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <td class="th_color" width="20%"><strong>参数</strong></td>
+                                <td class="th_color" width="80%"><strong>值</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>选择环境</td>
+                                <td>
+                                    <select id="env_info2" name="env" class="form-control "></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>测试接口</td>
+                                <td>
+                                    <input type="text" placeholder='必填! 多个接口用","分隔'
+                                           class="form-control" name="batch_apis" id="batch_apis">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>接收邮箱</td>
+                                <td>
+                                    <input type="text" placeholder='选填, 多个邮箱用","分隔'
+                                           class="form-control" name="batch_email" id="batch_email">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>报告名称</td>
+                                <td>
+                                    <input type="text" placeholder="选填"
+                                           class="form-control" name="batch_title" id="batch_title">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin: 1%">
+                        <textarea id="batch_test_res_body" class="form-control" name="batch_test_res_body"
+                              placeholder="返回的响应"></textarea>
+                    </div>
+                </div>
+                <div class="panel-footer" style="text-align: right">
+                    <button type="button" class="btn btn-info" id="show_test_report" style="display: none;"></button>
+                    <button type="button" class="btn btn-default close_batch_test_pop">返回</button>
+                    <button type="button" class="btn btn-primary" id="submit_batch_test">提交</button>
+                </div>
+            </div>
+        </div>
+
+        {# 确认提示框 #}
+        <div id="ycf-alert" class="modal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                                class="sr-only">Close</span></button>
+                        <h5 class="modal-title"><i class="fa fa-exclamation-circle"></i> [Title]</h5>
+                    </div>
+                    <div class="modal-body small">
+                        <h4><strong>[Message]</strong></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{#        <div id="confirmation_box" class="panel_pop" style="display: none">#}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h3 class="panel-title">#}
+{#                        <span id="panel-title">提示</span>#}
+{#                        <button type="button" class="close colse_panel_pop" aria-label="Close">#}
+{#                            <span aria-hidden="true">&times;</span></button>#}
+{#                    </h3>#}
+{#                </div>#}
+{#                <div class="panel-body">#}
+{#                    <h3 id="statement">123123123123123</h3>#}
+{#                </div>#}
+{#                <div class="panel-footer" style="text-align: right">#}
+{#                    <button type="hidden" class="btn btn-primary" id="statement_operat"></button>#}
+{#                    <button type="button" class="btn btn-primary colse_panel_pop">返回</button>#}
+{#                    <button type="button" class="btn btn-default" id="submit_panel_pop">确认</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+
+        <div class="header_nav">
+
+            <div class="tiele col-sm-10" style="text-align: center">
+                <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    接口测试平台</h2>
+            </div>
+             <div class="col-sm-2">
+                <span id="user_info" style="text-align: right">
+                    {{ user_name }}</span>&nbsp;--&nbsp;<a href="./logout">退出登录</a>
+            </div>
+        </div>
+
+        <div class="Main">
+
+            <!-- 左侧treeview -->
+            <div id="Nav" class="col-sm-3" value="0">
+                <div>
+                    <h4 class="col-sm-2 mulu">目录</h4>
+                    <div class="col-sm-10 padding-l-r-0">
+                        <div class="col-sm-6 padding-l-r-0">
+                            <input type="text" autocomplete="off" placeholder="文件夹的名字" value="" id="newFodlerName"
+                               class="newFodlerName form-control">
+                        </div>
+                        <div class="col-sm-2">
+                            <div id="newFodler" class="icon1">
+                                <img src="../../static/img/pub/加号.png" alt="添加">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div id="editeFodler" class="icon1">
+                                <img src="../../static/img/pub/编辑.png" alt="编辑">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div id="deleteFodler" class="icon1">
+                                <img src="../../static/img/pub/减号.png" alt="删除">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br> <br>
+
+                <div id="treeview" class="treeview"></div>
+
+            </div>
+
+
+            <!-- 中间api页面部分 -->
+            <div class="main col-sm-9">
+                <form id="req_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                     <!--用来标记是新建API还是已经选择的API-->
+
+                    <!-- 当前node的id -->
+                    <!-- <input type="hidden" id="c_node_id" name="c_node_id" value=""> -->
+                    <!-- 当前api的id -->
+                    <input type="hidden" id="c_api_id" name="c_api_id" value="">
+                    <!-- 当前case的id -->
+                    <input type="hidden" id="c_case_id" name="c_case_id" value="">
+
+                    <!--环境部分-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color2">
+                                        <div class="col-sm-1 line34" style="padding: 0" id="batch_req_button"><strong>环境&功能</strong></div>
+                                        <div class="col-sm-3">
+                                            <select id="env_info" name="env" class="form-control "></select>
+                                        </div>
+                                        {# <div class="float_r"><button type="button" class="btn btn-info" id="test">测试用</button></div>#}
+
+                                        <div class="float_r"><button type="button" class="btn btn-info"
+                                                                     id="batch_test_button">批量测试</button></div>
+                                        <div class="float_r"><button type="button" class="btn btn-info">
+                                            <a href="./report/0" target="_blank">查看测试报告</a></button></div>
+{#                                        <div class="float_r"><button type="button" class="btn btn-info" id="license_recognit">#}
+{#                                            识别全国执照二维码</button></div>#}
+                                        <div class="float_r"><button type="button" class="btn btn-info" id="upload_case">上传测试用例</button></div>
+                                        <div class="float_r">
+                                            <button type="button" class="btn btn-info" id="show_env_info">查看环境参数</button>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+{#                            <tbody>#}
+{#                                <tr>#}
+{#                                    <td>#}
+{#                                        <select id="env_info" name="env" class="form-control "></select>#}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                            </tbody>#}
+                        </table>
+                    </div>
+                    <br>
+
+                    <!-- api部分 -->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color2">
+                                        <div class="float_l" style="height: 30px; margin-right: 20px">
+                                            <span style="line-height: 34px">接口信息</span>
+                                        </div>
+                                        <div id="newAPI" class="icon1" title="新建api">
+                                            <img src="../../static/img/pub/加号.png" alt="新建api">
+                                        </div>
+                                        <div id="updateAPI" class="icon1" title="更新api">
+                                            <img src="../../static/img/pub/编辑.png" alt="更新api">
+                                        </div>
+                                        <div id="deleteAPI" class="icon1" title="删除当前api">
+                                            <img src="../../static/img/pub/减号.png" alt="删除当前api">
+                                        </div>
+                                        <div class="save_area float_l">
+                                            <div class="choose">
+                                                <button type="button" class="btn btn-info " id="saveAPI">另存为: </button>
+                                            </div>
+                                            <div class="float_l choose_node_div">
+                                                <select class="form-control" id="choose_node" data-style="btn-info"></select>
+                                            </div>
+                                        </div>
+{#                                        <div class="float_l" style="line-height: 34px;margin-left: 20px">#}
+{#                                            <b>当前状态：</b><lable id="API_status">新的API</lable><br>#}
+{#                                        </div>#}
+                                        <div class="dl_api_case_data float_l" style="margin-left: 20px">
+                                            <button type="button" class="btn btn-info " id="dl_api_case_data">下载接口用例数据</button>
+                                            <a href="" id="dl_api_case_data_a" target="_blank"><span></span></a>
+                                        </div>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--描述部分-->
+                                <tr>
+                                    <td>
+                                        <div class="method_div col-sm-1">
+                                            <select id="method" name="method" class="form-control">
+                                                <option value="Post">Post</option>
+                                                <option value="Get">Get</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-11">
+                                            <input type="text" placeholder="API标题(不可为空)" id="api_title"
+                                               class="form-control" name="api_title">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" placeholder="API描述" id="api_desc" class="form-control" name="api_desc">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <!-- 选择测试用例,测试标题,描述部分,请求地址-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color">
+                                        <div class="float_l" style="height: 34px;margin-right: 20px">
+                                            <span style="line-height: 34px">用例信息</span>
+                                        </div>
+                                        <div style="float: left;">
+                                            <select name="case_select" class="form-control" style="width: 120px" id="case_select">
+
+                                            </select>
+                                        </div>
+                                        <div id="newCase" class="icon1" title="清空case">
+                                            <img src="../../static/img/pub/加号.png" alt="清空case">
+                                        </div>
+                                        <div id="updateCase" class="icon1" title="更新当前用例">
+                                            <img src="../../static/img/pub/编辑.png" alt="更新当前用例">
+                                        </div>
+                                        <div id="deleteCase" class="icon1" title="删除当前用例">
+                                            <img src="../../static/img/pub/减号.png" alt="删除当前用例">
+                                        </div>
+                                        <button type="button" class="btn btn-info" id="saveCase" title="保存用例到当前接口下">
+                                                    &nbsp;&nbsp;保存&nbsp;&nbsp;</button>
+                                        <button type="button" class="btn btn-info" id="lastCase" title="上一个">
+                                                    &nbsp;&nbsp;上一个&nbsp;&nbsp;</button>
+                                        <button type="button" class="btn btn-info" id="nextCase" title="下一个">
+                                                    &nbsp;&nbsp;下一个&nbsp;&nbsp;</button>
+                                        <input type="button" id="send_req" value="发送请求" class="btn btn-success">
+                                        <label class="checkbox-inline">
+                                              <input type="checkbox" id="case_status" name="case_status" value="1" checked="checked">
+                                            <strong>启用</strong>
+                                        </label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" autocomplete="off"
+                                                   placeholder="请求地址"
+                                                   value="" id="url" name="url" class="url form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" placeholder="测试用例标题" id="case_title"
+                                               class="form-control" name="case_title">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" placeholder="测试用例描述" id="case_desc"
+                                               class="form-control" name="case_desc" >
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <!--校验响应部分-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color" colspan="7" class=""><strong>校验返回结果</strong></th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <td class="" width="10%">状态</td>
+                                    <td class="" width="20%">断言键</td>
+                                    <td class="" width="20%">期望结果</td>
+                                    <td class="" width="10%">断言方式</td>
+                                    <td class="" width="20%">实际结果</td>
+                                    <td class="" width="10%">断言结果</td>
+                                    <td class="" width="10%">操作</td>
+                                </tr>
+                            </thead>
+                            <tbody id="verify_tbody">
+                                <tr id="verify_mark">
+                                    <td colspan="7">
+                                        <button type="button" class="btn btn-info add_verify_tr">添加断言</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <!--前置操作-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color" colspan="6"><strong>前置操作</strong></th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <td class="" width="10%">状态</td>
+                                    <td class="" width="10%">调用用例</td>
+                                    <td class="" width="10%">设置参数名</td>
+                                    <td class="" width="30%">参数键</td>
+                                    <td class="" width="30%">实际值</td>
+                                    <td class="" width="10%">操作</td>
+                                </tr>
+                            </thead>
+                            <tbody id="prefix_tbody">
+                                <tr id="prefix_mark">
+                                    <td colspan="6">
+                                        <button type="button" class="btn btn-info add_prefix_tr">添加</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <!--请求参数部分-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th class="th_color" style="width: 30%;" class="">请求参数(url参数)名称</th>
+                                <th class="th_color" style="width: 70%;" class="">请求参数值</th>
+                            </tr>
+                            </thead>
+                            <tbody id="param_tbody">
+                            <tr id="param_mark">
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-info addParamenter">添加参数</button>
+                                    <button type="button" class="btn btn-info" id="switch_json">键值对转换成json格式</button>
+                                    <button type="button" class="btn btn-info" id="switch_kv">json格式转换成键值对</button>
+{#                                    <button type="button" class="btn btn-info" id="F12_p_to_json">F12的请求参数转换json</button>#}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <!--josn格式参数和响应体部分-->
+                    <div class="div_border">
+                        <div class="clear-p-l">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="th_color" class="line34"><strong>请求体</strong></th>
+                                    <th class="th_color" class="line34"><strong>响应体</strong>
+{#                                        <input type="button" id="send_req" value="发送请求" class="btn btn-success"#}
+{#                                            style="float: right">#}
+{#                                        <input type="button" id="res_time" value="" class="btn btn-info"#}
+{#                                            style="float: right">#}
+{#                                        <input type="button" id="status_code" value="" class="btn btn-info"#}
+{#                                            style="float: right">#}
+                                        <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+                                        <span id="res_time" style="float: right;"></span>
+                                        <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+                                        <span id="status_code" style="float: right;"></span>
+                                        <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+                                        <span id="res_erro" style="float: right; color: red;"></span>
+                                        <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tr>
+                                    <td>
+                                        <textarea id="params" class="form-control" name="params"
+                                              placeholder="这里可以输入json格式参数{&quot;a&quot;:1,&quot;b&quot;:2}"></textarea>
+                                    </td>
+                                    <td>
+                                        <textarea id="res_body" class="form-control" name="res_body" placeholder="这里是返回的响应体"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br>
+
+
+                    <!--响应设置全局变量 Response sets global variables   rsgv-->
+                    <div class="div_border">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="th_color" colspan="6" class=""><strong>响应设置全局变量</strong></th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <td class="" width="10%">状态</td>
+                                    <td class="" width="10%">变量名称</td>
+                                    <td class="" width="30%">变量键</td>
+                                    <td class="" width="40%">实际值</td>
+                                    <td class="" width="10%">操作</td>
+                                </tr>
+                            </thead>
+                            <tbody id="rsgv_tbody">
+                                <tr id="rsgv_mark">
+                                    <td colspan="6">
+                                        <button type="button" class="btn btn-info add_rsgv_tr">添加</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <!--请求头header部分-->
+{#                    <div class="div_border">#}
+{#                            <table class="table table-bordered table-striped">#}
+{#                                <thead>#}
+{#                                <tr>#}
+{#                                    <th class="th_color" style="width: 30%;" class="">Header名称</th>#}
+{#                                    <th class="th_color" style="width: 70%;" class="">Header值</th>#}
+{#                                </tr>#}
+{#                                </thead>#}
+{#                                <tbody id="header_tbody">#}
+{#                                <tr id="header_mark">#}
+{#                                    <td colspan="2">#}
+{#                                        <button type="button" k="headKeys" v="headValues"#}
+{#                                                class="btn btn-info addHeadParamenter">添加参数#}
+{#                                        </button>#}
+{#                                        <button type="button" class="btn btn-info" id="h_info_show"><a#}
+{#                                                href="#header_info" class="header_info">Header参数解释？(展开)</a>#}
+{#                                        </button>#}
+{#                                        <button type="button" class="btn btn-info" id="h_info_close"><a#}
+{#                                                href="#header_info" class="header_info">Header参数解释？(收起)</a>#}
+{#                                        </button>#}
+{##}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                    <br>#}
+
+                    <!--响应头和cookies-->
+{#                    <div class="div_border">#}
+{#                            <table class="table res table-bordered table-striped">#}
+{#                                <thead>#}
+{#                                    <tr>#}
+{#                                        <th class="th_color"><strong>Response Header</strong></th>#}
+{#                                        <th class="th_color">Cookie（没有就不用填入）#}
+{#                                            <button type="button" class="btn btn-info" id="add_sign" value="">添加当前时间戳</button>#}
+{#                                        </th>#}
+{#                                    </tr>#}
+{#                                </thead>#}
+{#                                <tbody class="res_tbody">#}
+{#                                    <tr>#}
+{#                                        <td><textarea placeholder="这里是返回的响应头 " calss="form-control"#}
+{#                                                      id="res_headers"#}
+{#                                                      name="res_headers"></textarea></td>#}
+{#                                        <td><textarea placeholder="这里是json格式的cookies,长度限制4000"#}
+{#                                                      class="cookies form-control"#}
+{#                                                      id="cookies" name="cookies"></textarea></td>#}
+{#                                    </tr>#}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                    <br>#}
+
+                    <!--header参数解释部分 -->
+{#                    <div>#}
+{#                        <table id="header_info" class="table table-bordered table-striped table-hover"#}
+{#                                       style="display: none;">#}
+{#                                    <thead>#}
+{#                                    <tr>#}
+{#                                        <th class="th_color">Header</th>#}
+{#                                        <th class="th_color" width="35%">解释</th>#}
+{#                                        <th class="th_color" width="40%">示例</th>#}
+{#                                    </tr>#}
+{#                                    </thead>#}
+{#                                    <tbody>#}
+{#                                    <tr>#}
+{#                                        <td>Accept</td>#}
+{#                                        <td>指定客户端能够接收的内容类型</td>#}
+{#                                        <td>Accept:text/plain,text/html</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Accept-Charset</td>#}
+{#                                        <td>浏览器可以接受的字符编码集。</td>#}
+{#                                        <td>Accept-Charset:iso-8859-5</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Accept-Encoding</td>#}
+{#                                        <td>指定浏览器可以支持的web服务器返回内容压缩编码类型。</td>#}
+{#                                        <td>Accept-Encoding:compress,gzip</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Accept-Language</td>#}
+{#                                        <td>浏览器可接受的语言</td>#}
+{#                                        <td>Accept-Language:en,zh</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Accept-Ranges</td>#}
+{#                                        <td>可以请求网页实体的一个或者多个子范围字段</td>#}
+{#                                        <td>Accept-Ranges:bytes</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Authorization</td>#}
+{#                                        <td>HTTP授权的授权证书</td>#}
+{#                                        <td>Authorization:Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Cache-Control</td>#}
+{#                                        <td>指定请求和响应遵循的缓存机制</td>#}
+{#                                        <td>Cache-Control:no-cache</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Connection</td>#}
+{#                                        <td>表示是否需要持久连接。（HTTP 1.1默认进行持久连接）</td>#}
+{#                                        <td>Connection:close</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Cookie</td>#}
+{#                                        <td>HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。</td>#}
+{#                                        <td>Cookie:$Version=1;Skin=new;</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Content-Length</td>#}
+{#                                        <td>请求的内容长度</td>#}
+{#                                        <td>Content-Length:348</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Content-Type</td>#}
+{#                                        <td>请求的与实体对应的MIME信息</td>#}
+{#                                        <td>Content-Type:application/x-www-form-urlencoded</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Date</td>#}
+{#                                        <td>请求发送的日期和时间</td>#}
+{#                                        <td>Date:Tue,15 Nov&nbsp;2010 08:12:31 GMT</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Expect</td>#}
+{#                                        <td>请求的特定的服务器行为</td>#}
+{#                                        <td>Expect:100-continue</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>From</td>#}
+{#                                        <td>发出请求的用户的Email</td>#}
+{#                                        <td>From:user@email.com</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Host</td>#}
+{#                                        <td>指定请求的服务器的域名和端口号</td>#}
+{#                                        <td>Host:www.zcmhi.com</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>If-Match</td>#}
+{#                                        <td>只有请求内容与实体相匹配才有效</td>#}
+{#                                        <td>If-Match:“737060cd8c284d8af7ad3082f209582d”</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>If-Modified-Since</td>#}
+{#                                        <td>如果请求的部分在指定时间之后被修改则请求成功，未被修改则返回304代码</td>#}
+{#                                        <td>If-Modified-Since:Sat,29 Oct 2010 19:43:31 GMT</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>If-None-Match</td>#}
+{#                                        <td>如果内容未改变返回304代码，参数为服务器先前发送的Etag，与服务器回应的Etag比较判断是否改变</td>#}
+{#                                        <td>If-None-Match:“737060cd8c284d8af7ad3082f209582d”</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>If-Range</td>#}
+{#                                        <td>如果实体未改变，服务器发送客户端丢失的部分，否则发送整个实体。参数也为Etag</td>#}
+{#                                        <td>If-Range:“737060cd8c284d8af7ad3082f209582d”</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>If-Unmodified-Since</td>#}
+{#                                        <td>只在实体在指定时间之后未被修改才请求成功</td>#}
+{#                                        <td>If-Unmodified-Since:Sat,29 Oct 2010 19:43:31 GMT</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Max-Forwards</td>#}
+{#                                        <td>限制信息通过代理和网关传送的时间</td>#}
+{#                                        <td>Max-Forwards:10</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Pragma</td>#}
+{#                                        <td>用来包含实现特定的指令</td>#}
+{#                                        <td>Pragma:no-cache</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Proxy-Authorization</td>#}
+{#                                        <td>连接到代理的授权证书</td>#}
+{#                                        <td>Proxy-Authorization:Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Range</td>#}
+{#                                        <td>只请求实体的一部分，指定范围</td>#}
+{#                                        <td>Range:bytes=500-999</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Referer</td>#}
+{#                                        <td>先前网页的地址，当前请求网页紧随其后,即来路</td>#}
+{#                                        <td>Referer:http:</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>TE</td>#}
+{#                                        <td>客户端愿意接受的传输编码，并通知服务器接受接受尾加头信息</td>#}
+{#                                        <td>TE:trailers,deflate;q=0.5</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Upgrade</td>#}
+{#                                        <td>向服务器指定某种传输协议以便服务器进行转换（如果支持）</td>#}
+{#                                        <td>Upgrade:HTTP/2.0,SHTTP/1.3,IRC/6.9,RTA/x11</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>User-Agent</td>#}
+{#                                        <td>User-Agent的内容包含发出请求的用户信息</td>#}
+{#                                        <td>User-Agent:Mozilla/5.0(Linux;X11)</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>Via</td>#}
+{#                                        <td>通知中间网关或代理服务器地址，通信协议</td>#}
+{#                                        <td>Via:1.0 fred,1.1 nowhere.com(Apache/1.1)</td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>warning</td>#}
+{#                                        <td>关于消息实体的警告信息</td>#}
+{#                                        <td>Warn:199 Miscellaneous warning</td>#}
+{#                                    </tr>#}
+{#                                    </tbody>#}
+{#                                </table>#}
+{#                    </div>#}
+
+                </form>
+            </div>
+
+        <!-- Main的闭合/div-->
+        </div>
+
+    <!-- wrap的闭合/div-->
+    </div>
+
+</body>
+
+</html>
