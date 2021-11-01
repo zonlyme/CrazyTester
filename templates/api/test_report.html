@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告详情</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+
+    <style>
+        .main{
+            margin-top: 20px;
+        }
+        #case_detail_div{   /* 查看用例详情框*/
+            position: fixed;
+            width: 90%;
+            top: 5%;
+            left: 5%;
+            height: 90%;
+            z-index: 9;
+            text-align: left;
+            background-color: white;
+            display: none;
+        }
+        .get_case_detail{
+            cursor:pointer;
+        }
+        .api_info{
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div class="wrap">
+    <div id="pops">
+        <div id="case_detail_div" class="panel panel-default pop_panel" style="display: none;">
+            <div class="panel-heading" style="height: 5%;">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center" class="case_detail_title">用例详情数据</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body" style="height: 88%; overflow-y: scroll">
+                <div id="case_info_table" style="height: auto; "></div>
+                <br>
+                <table id="case_detail_data_table" class="table table-bordered table-striped" style="display: none">
+                    <thead>
+                    <tr>
+                        <th class="bg_color3" width="33%"><strong>实际请求参数</strong></th>
+                        <th class="bg_color3" width="33%"><strong>响应体
+                        <span class="label label-info fr" id="status_code" style="margin-top: 8px"></span>
+                        <th class="bg_color3" width="33%"><strong>此用例用到的变量数据</strong>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <textarea id="req_item_real" class="form-control textarea_h400" readonly></textarea>
+                        </td>
+                        <td>
+                            <textarea id="res_part" class="form-control textarea_h400" placeholder="响应部分" readonly></textarea>
+                        </td>
+                        <td>
+                            <textarea id="case_variable" class="form-control textarea_h400" placeholder="此用例用到的数据" readonly></textarea>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <table id="case_detail_data_table2" class="table table-bordered table-striped" style="display: none">
+                    <thead>
+                    <tr>
+{#                        <th class="bg_color3" width="25%"><strong>全局域名</strong>#}
+{#                        <span class="label label-info" id="global_host_id"></span>#}
+{#                        <div class="label label-info" id="global_host_title"></div></th>#}
+
+                        <th class="bg_color3" width="33%"><strong>全局变量</strong>
+                        <span class="label label-info" id="global_variable_id"></span>
+                        <div class="label label-info" id="global_variable_title"></div></th>
+
+                        <th class="bg_color3" width="33%"><strong>全局请求头</strong>
+                        <span class="label label-info" id="global_header_id"></span>
+                        <div class="label label-info" id="global_header_title"></div></th>
+
+                        <th class="bg_color3" width="33%"><strong>全局cookie</strong>
+                        <span class="label label-info" id="global_cookie_id"></span>
+                        <div class="label label-info" id="global_cookie_title"></div></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+{#                        <td>#}
+{#                            <textarea id="global_host" class="form-control textarea_h400" readonly></textarea>#}
+{#                        </td>#}
+                        <td>
+                            <textarea id="global_variable" class="form-control textarea_h400" readonly></textarea>
+                        </td>
+                        <td>
+                            <textarea id="global_header" class="form-control textarea_h400" readonly></textarea>
+                        </td>
+                        <td>
+                            <textarea id="global_cookie" class="form-control textarea_h400" readonly></textarea>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="height: 7%;text-align: right">
+                <button type="button" class="btn btn-primary close_pop_panel">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="col-sm-11">
+
+            <div id="statistics"></div>
+
+            <div class="api_info" id="api_info">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="foot" style="text-align: left; margin-bottom: 50px">
+                <hr color="f2ebfb">
+                <div style="line-height: 27px">全局环境：<span class="global_env"></span></div>
+                <div style="line-height: 27px">测试类型：<span class="test_type"></span></div>
+                <div style="line-height: 27px">所属项目：<span class="project_title"></span></div>
+                <div style="line-height: 27px">触发方式：<span class="trigger_way"></span></div>
+                <div style="line-height: 27px">执行人：<span class="latest_update_user"></span></div>
+                <div style="line-height: 27px">执行时长(秒)：<span class="execution_time"></span></div>
+                <div style="line-height: 27px">执行时间：<span class="report_c_date"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+
+<script>
+
+var api_table_header = function () {
+/*
+    <tr class="bg_color1">
+        <th width="25%">分组名称</th>
+        <th width="25%">接口名称</th>
+        <th width="10%">测试用例数量</th>
+        <th width="10%">测试通过</th>
+        <th width="10%">测试失败</th>
+        <th width="10%">忽略数量</th>
+        <th width="10%">最终结果</th>
+        <th width="10%">操作</th>
+    </tr>
+*/
+};
+var case_table_header = function () {
+/*
+    <tr class="bg_color1">
+        <th width="35%">接口名称</th>
+        <th width="45%">用例名称</th>
+        <th width="10%">断言结果</th>
+        <th width="10%">操作</th>
+    </tr>
+*/
+};
+
+var api_info_table_tr = function () {
+/*
+    <tr>
+        <td class="group_title"></td>
+        <td class="api_title"></td>
+        <td class="case_count"></td>
+        <td class="case_seccuss"></td>
+        <td class="case_fail"></td>
+        <td class="case_ignore"></td>
+        <td class="api_ret"></td>
+        <td>
+            <button type="button" class="btn btn-info get_case_detail">查看详情</button>
+        </td>
+    </tr>
+*/
+};
+
+var case_info_table_tr = function () {
+/*
+    <tr>
+        <td class="api_title"></td>
+        <td class="case_title"></td>
+        <td class="case_ret"></td>
+        <td>
+            <button type="button" class="btn btn-info report_detail">查看详情</button>
+        </td>
+    </tr>
+*/
+};
+
+// 返回的测试报告数据
+var report_data;
+// 获取测试报告
+var get_report_data = function () {
+
+    var params = {
+        id: getUrlQueryString("id")
+    };
+    var res_data = send_get_report_data(params);
+
+    // 先判断是否成功获取报告数据
+    if (res_data.ret){
+
+        report_data = res_data.data;
+
+        $("#foot .test_type").html(report_data.test_type);
+        $("#foot .global_env").html('<a href="/admin/api/globalenv/{0}/change/">{1}</a>'.format(report_data.global_env_id, report_data.global_env_title));
+        $("#foot .trigger_way").html(report_data.trigger_way);
+        $("#foot .project_title").html(report_data.project_title);
+        $("#foot .latest_update_user").html(report_data.latest_update_user);
+        $("#foot .execution_time").html(report_data.execution_time);
+        $("#foot .report_c_date").html(report_data.c_date);
+
+        $("title").html("【测试报告】" + report_data.title);
+        set_header_middle(report_data.title)
+
+        if(!report_data.flag){
+            $("#api_info tbody").html("<a style='color:red'>" + report_data.erro_msg + "</a>");
+            return
+        }
+
+        // set_tree(report_data.report_tree);
+        if(report_data.test_type == "场景测试"){
+            set_statistics_info_2()
+        }
+        else{
+            set_statistics_info_1()
+        }
+    }
+};
+
+
+var set_statistics_info_1 = function () {
+
+    $("#api_info thead").append(api_table_header.getMultiLine());
+
+    // 总统计
+    var statistics_item = report_data.report.statistics_item;
+
+    var final_ret;
+    if(statistics_item.flag){
+        final_ret= "通过";
+    }else{
+        final_ret = "<span style='color:red'>未通过</span>";
+    }
+    var statistics_html = "<h3><b>本次总共测试{0}个接口，通过：{1}个， 失败：<span style='color:red'>{2}</span>个， 忽略：<span style='color:red'>{3}</span>个， 最终结果:{4}</b></h3>".format(
+    statistics_item.count, statistics_item.success, statistics_item.fail, statistics_item.ignore, final_ret);
+    $("#statistics").append(statistics_html);
+
+    for (i in report_data.report.api_list){
+        var api_info_html = $(api_info_table_tr.getMultiLine());
+        var api_info = report_data.report.api_list[i].statistics_item;
+        api_info_html.find(".group_title").html(report_data.report.api_list[i].group_title);
+        api_info_html.find(".api_title").html(report_data.report.api_list[i].title);
+        api_info_html.find(".case_count").html(api_info.count);
+        api_info_html.find(".case_seccuss").html(api_info.success);
+        api_info_html.find(".case_ignore").html(api_info.ignore);
+        if (api_info.fail > 0){
+            var str1 = "<a style='color:red'>{0}</a>".format(api_info.fail);
+            api_info_html.find(".case_fail").html(str1);
+        }else{
+            api_info_html.find(".case_fail").html(api_info.fail);
+        }
+        if(api_info.flag){
+            api_info_html.find(".api_ret").html("通过");
+        }else{
+            api_info_html.find(".api_ret").html("<a style='color:red'>未通过</a>");
+        }
+        api_info_html.find(".get_case_detail").attr("report_id", report_data.id);
+        api_info_html.find(".get_case_detail").attr("api_id", report_data.report.api_list[i].id);
+        var api_info_html2 = api_info_html.prop("outerHTML");
+        $("#api_info tbody").append(api_info_html2);
+    }
+};
+
+
+var set_statistics_info_2 = function () {
+
+    $("#api_info thead").append(case_table_header.getMultiLine());
+
+    // 总统计
+    var statistics_item = report_data.report.statistics_item;
+    var final_ret;
+    if(statistics_item.flag){
+        final_ret= "通过";
+    }else{
+        final_ret = "<span style='color:red; text-decoration:underline;'>未通过</span>";
+    }
+    var statistics_html = "<h3><b>本此总共测试{0}个用例，通过：{1}个， 失败：<span style='color:red'>{2}</span>个， 忽略：<span style='color:red'>{3}</span>个， 最终结果:{4}</b></h3>".format(
+    statistics_item.count, statistics_item.success, statistics_item.fail, statistics_item.ignore, final_ret);
+    $("#statistics").append(statistics_html);
+
+    for (i in report_data.report.api_list){
+        console.log(report_data.report.api_list[i])
+        var api_info_html = $(case_info_table_tr.getMultiLine());
+        var api_info = report_data.report.api_list[i];
+        api_info_html.find(".api_title").html(api_info.title);
+        var case_ret = "";
+        var a_html = '<a href="/html/api/api_detail?index_flag=1&id={0}&case_id={1}" target="_blank">{2}</a>'.format(
+            api_info.id, api_info.case_list[0].id, api_info.case_list[0].title
+        );
+        api_info_html.find(".case_title").html(a_html);
+        if (api_info.statistics_item.ignore > 0){
+            case_ret = "未启用";
+            api_info_html.find(".report_detail").html("未  启  用 !");
+            api_info_html.find(".report_detail").removeClass("btn-info");
+            api_info_html.find(".report_detail").addClass("btn-warning");
+            api_info_html.find(".report_detail").removeClass("report_detail");
+
+        }
+        else if (api_info.statistics_item.fail > 0){
+            case_ret = "<a style='color:red'>未通过</a>";
+        }else{
+            case_ret = "通过";
+        }
+
+        api_info_html.find(".report_detail").attr("report_detail_id", api_info.case_list[0].report_detail_id);
+        api_info_html.find(".report_detail").attr("api_id", api_info.id);
+
+        api_info_html.find(".case_ret").html(case_ret);
+        var api_info_html2 = api_info_html.prop("outerHTML");
+        $("#api_info tbody").append(api_info_html2);
+    }
+};
+
+// 场景测试，弹出对应用例的用例详情
+$("#api_info").on("click", ".report_detail", function () {
+    var report_detail_id = $(this).attr("report_detail_id");
+    var api_id = $(this).attr("api_id");
+    var params = {
+        report_detail_id: report_detail_id
+    };
+    $("#case_detail_data_table").show();
+    $("#case_detail_data_table2").show();
+    var res_data = send_get_case_detail(params);
+    if (res_data.ret) {
+        set_case_detail2(api_id, res_data.data);
+        $("#case_detail_div").show();
+        open_zhe();
+    }
+});
+
+// 全量测试，弹出对应所有失败用例信息
+$("#api_info").on("click", ".get_case_detail", function () {
+    var report_id = $(this).attr("report_id");
+    var api_id = $(this).attr("api_id");
+    var params = {
+        report_id: report_id,
+        api_id: api_id
+    };
+    var res_data = send_get_case_detail(params);
+    if (res_data.ret){
+        set_case_detail(api_id, res_data.datas);
+        $("#case_detail_div").show();
+        open_zhe();
+    }
+});
+
+
+var case_table_html = function () {
+    /*
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th colspan="6" class="bg_color1"><span class="case_title"></span></th>
+        </tr>
+        <tr class="header">
+            <td class="" width="20%"><span>断言键</span></td>
+            <td class="" width="25%"><span>期望结果</span></td>
+            <td class="" width="8%"><span>断言方式</span></td>
+            <td class="" width="20%"><span>实际结果</span></td>
+            <td class="" width="27%"><span>断言结果</span></td>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+*/
+};
+var case_table_html2 = function () {
+    /*
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th colspan="6" class="bg_color1"><span class="case_title"></span></th>
+        </tr>
+        <tr class="header">
+            <td class="" width="20%"><span>断言键</span></td>
+            <td class="" width="25%"><span>期望结果</span></td>
+            <td class="" width="8%"><span>断言方式</span></td>
+            <td class="" width="20%"><span>实际结果</span></td>
+            <td class="" width="27%"><span>断言结果</span></td>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+*/
+};
+
+var clear_case_table_html = function (case_table_html_, msg) {
+    var tr_text = '<tr><td colspan="6">' +
+            '<input class="form-control" style="color:red" type="text" value="'+
+            msg +'"></td></tr>';
+    case_table_html_.find(".header").remove();
+    case_table_html_.find("thead").append(tr_text);
+};
+var set_case_detail2 = function (api_id, report_info) {
+    var case_info = report_info.case_info;
+
+    $("#req_item_real").val("").val(json_stringify(case_info.req_item_real));
+    var res_part = case_info.res_part;
+    $("#res_part").val("").val(json_stringify(res_part.res_body));
+    $("#status_code").val("").html(res_part.status_code);
+    $("#case_variable").val("").val(json_stringify(case_info.case_variable));
+
+{#    $("#global_host").val("").val(case_info.global_config.global_host.host);#}
+{#    $("#global_host_id").html("").html(case_info.global_config.global_host.id);#}
+{#    $("#global_host_title").html("").html(case_info.global_config.global_host.title);#}
+    if (case_info.global_config.global_variable){
+        $("#global_variable").val("").val(json_stringify(case_info.global_config.global_variable.params));
+        $("#global_variable_id").html("").html(case_info.global_config.global_variable.id);
+        $("#global_variable_title").html("").html(case_info.global_config.global_variable.title);
+    }
+    else{
+        $("#global_variable").val("").val("未使用！");
+    }
+
+    if (case_info.global_config.global_header){
+        $("#global_header").val("").val(json_stringify(case_info.global_config.global_header.params));
+        $("#global_header_id").html("").html(case_info.global_config.global_header.id);
+        $("#global_header_title").html("").html(case_info.global_config.global_header.title);
+    }
+    else{
+        $("#global_header").val("").val("未使用！");
+    }
+
+    if (case_info.global_config.global_cookie){
+        $("#global_cookie").val("").val(json_stringify(case_info.global_config.global_cookie.params));
+        $("#global_cookie_id").html("").html(case_info.global_config.global_cookie.id);
+        $("#global_cookie_title").html("").html(case_info.global_config.global_cookie.title);
+    }
+    else{
+        $("#global_cookie").val("").val("未使用！");
+    }
+
+    var case_table_html_ = $(case_table_html2.getMultiLine());
+
+    var a_tag = '<a href="/html/api/api_detail?index_flag=1&id={0}&case_id={1}" target="_blank">{2} -- {3}</a>'.format(api_id, report_info.case_id, report_info.case_id, report_info.case_title);
+    case_table_html_.find(".case_title").html(a_tag);
+
+    if (case_info.msg){
+        clear_case_table_html(case_table_html_, case_info.msg);
+    }
+    else {
+        // 如果接口请求成功
+        if (case_info.res_part.successful_response_flag) {
+            // 如果响应体是json格式
+            {#            if(case_info.res_part.res_body_is_json){#}
+            for (k in case_info.req_item_real.asserts) {
+                var assert = case_info.req_item_real.asserts[k];
+                if (assert.assert_status == "1") {
+                    var tr_text = '<tr>' +
+                        '<td><input readonly class="form-control" type="text" value="" id="assert_key"></td>' +
+                        '<td><input readonly class="form-control" type="text" value="" id="assert_expect_value"></td>' +
+                        '<td><input readonly class="form-control" type="text" value="" id="assert_method"></td>' +
+                        '<td><input readonly class="form-control" type="text" value="" id="assert_real_value"></td>' +
+                        '<td><input readonly class="form-control" type="text" value="" id="assert_ret"></td>' +
+                        '</tr>';
+                    var tr = $(tr_text);
+                    tr.find("#assert_key").attr("value", assert.assert_key);
+                    tr.find("#assert_expect_value").attr("value", assert.assert_expect_value);
+                    tr.find("#assert_method").attr("value", assert.assert_method);
+                    tr.find("#assert_real_value").attr("value", assert.assert_real_value);
+                    tr.find("#assert_ret").attr("value", assert.assert_ret);
+
+                    if (assert.assert_ret) {
+                        tr.find("#assert_ret").attr("value", "验证成功");
+                    }
+                    else {
+                        tr.find("#assert_ret").attr("value", assert.assert_erro);
+                        {#                            tr.find("#assert_erro").attr("value", assert.assert_erro);#}
+                        tr.find("#assert_ret").css({"color": "red"});
+                        {#                            tr.find("#assert_erro").css({"color":"red"});#}
+                    }
+                    var tr_html = tr.prop("outerHTML");
+                    case_table_html_.find("tbody").append(tr_html);
+                }
+            }
+            {#            }#}
+            {#            // 如果响应体不是json格式: 断言实际值会处理#}
+            {#            else{#}
+            {#                tr_text = '<tr><td colspan="6">' +#}
+            {#                '<input class="form-control" style="color:red" type="text" ' +#}
+            {#                    'value="响应体不是json格式，不支持断言"></td></tr>';#}
+            {#            case_table_html_.find(".header").remove();#}
+            {#            case_table_html_.find("thead").append(tr_text);#}
+            {#            }#}
+        }
+        // 如果发送请求失败
+        else {
+            clear_case_table_html(case_table_html_, case_info.res_part.fail_req_msg);
+        }
+    }
+    var table_html = case_table_html_.prop("outerHTML");
+    $("#case_info_table").append(table_html);
+
+};
+
+var set_case_detail = function (api_id, datas) {
+    // datas: [{case_id, case_title, case_info}, {}...]
+    // $(".case_detail_title").html();
+    for(i in datas){
+
+        var case_table_html_ = $(case_table_html.getMultiLine());
+
+        var a_tag = '<a href="/html/api/api_detail?index_flag=1&id={0}&case_id={1}" target="_blank">{2} -- {3}</a>'.format(api_id, datas[i].case_id, datas[i].case_id, datas[i].case_title);
+        case_table_html_.find(".case_title").html(a_tag);
+
+        var case_info = datas[i].case_info;
+
+        if (case_info.msg){
+            var tr_text = '<tr><td colspan="6">' +
+                '<input class="form-control" style="color:red" type="text" value="'+
+                case_info.msg +'"></td></tr>';
+            case_table_html_.find(".header").remove();
+            case_table_html_.find("thead").append(tr_text);
+        }
+        else{
+            // 如果接口请求成功
+            if (case_info.res_part.successful_response_flag){
+                // 如果响应体是json格式
+    {#            if(case_info.res_part.res_body_is_json){#}
+                    for (k in case_info.req_item_real.asserts) {
+                        assert = case_info.req_item_real.asserts[k];
+                        if(assert.assert_status == "1") {
+                            tr_text2 = '<tr>' +
+                                '<td><div><span id="assert_key"></span></div></td>' +
+                                '<td><div id="assert_expect_value"><span></span></div></td>' +
+                                '<td><div><span id="assert_method"></span></div></td>' +
+                                '<td><div><span id="assert_real_value"></span></div></td>' +
+                                '<td><div><span id="assert_ret"></span></div></td>' +
+                                '</tr>';
+                            tr_text = '<tr>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_key"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_expect_value"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_method"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_real_value"></td>' +
+                                '<td><input class="form-control" type="text" value="" id="assert_ret"></td>' +
+                                '</tr>';
+                            tr = $(tr_text);
+                            tr.find("#assert_key").attr("value", assert.assert_key);
+                            tr.find("#assert_expect_value").attr("value", assert.assert_expect_value);
+                            tr.find("#assert_method").attr("value", assert.assert_method);
+                            tr.find("#assert_real_value").attr("value", assert.assert_real_value);
+                            tr.find("#assert_ret").attr("value", assert.assert_ret);
+
+                            if (assert.assert_ret) {
+                                tr.find("#assert_ret").attr("value", "验证成功");
+                            }
+                            else {
+                                tr.find("#assert_ret").attr("value", assert.assert_erro);
+    {#                            tr.find("#assert_erro").attr("value", assert.assert_erro);#}
+                                tr.find("#assert_ret").css({"color":"red"});
+    {#                            tr.find("#assert_erro").css({"color":"red"});#}
+                            }
+                            tr_html = tr.prop("outerHTML");
+                            case_table_html_.find("tbody").append(tr_html);
+                        }
+                    }
+    {#            }#}
+    {#            // 如果响应体不是json格式#}
+    {#            else{#}
+    {#                tr_text = '<tr><td colspan="6">' +#}
+    {#                '<input class="form-control" style="color:red" type="text" ' +#}
+    {#                    'value="响应体不是json格式，不支持断言"></td></tr>';#}
+    {#            case_table_html_.find(".header").remove();#}
+    {#            case_table_html_.find("thead").append(tr_text);#}
+    {#            }#}
+            }
+            // 如果发送请求失败
+            else{
+                var tr_text = '<tr><td colspan="6">' +
+                    '<input class="form-control" style="color:red" type="text" value="'+
+                    case_info.res_part.fail_req_msg +'"></td></tr>';
+                case_table_html_.find(".header").remove();
+                case_table_html_.find("thead").append(tr_text);
+            }
+        }
+        var table_html = case_table_html_.prop("outerHTML");
+        $("#case_info_table").append(table_html);
+    }
+};
+
+$("#case_detail_div").on("click", ".close_pop_panel", function () {
+    $("#case_info_table").html("");
+    $("#case_detail_div").hide();
+    close_zhe();
+});
+
+get_user_info();
+
+get_report_data();
+
+</script>
+
+</html>

@@ -1,0 +1,96 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{##}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title></title>#}
+{#    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">#}
+{#    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">#}
+{##}
+{#    <script src="/static/js/pub/jquery-3.3.1.js"></script>#}
+{#    <script src="/static/js/pub/bootstrap.js"></script>#}
+{#    <script src="/static/js/pub/bootstrap-treeview.js"></script>#}
+{#    <style>#}
+{#    </style>#}
+{#</head>#}
+{##}
+{#<body>#}
+{#<div class="wrap">#}
+{#<!-- 选项卡菜单-->#}
+{#<ul id="myTab" class="nav nav-pills" role="tablist">#}
+{#    <li class="active"><a href="#bulletin" role="tab">公告</a></li>#}
+{#    <li><a href="#rule" role="tab" >规则</a></li>#}
+{#    <li><a href="#forum" role="tab" >论坛</a></li>#}
+{#    <li><a href="#security" role="tab" >安全</a></li>#}
+{#    <li><a href="#welfare" role="tab" >公益</a></li>#}
+{#</ul>#}
+{#<!-- 选项卡面板 -->#}
+{#<div id="myTabContent" class="tab-content">#}
+{#    <div class="tab-pane fade in active" id="bulletin">公告内容面板</div>#}
+{#    <div class="tab-pane fade" id="rule">规则内容面板</div>#}
+{#    <div class="tab-pane fade" id="forum">论坛内容面板</div>#}
+{#    <div class="tab-pane fade" id="security">安全内容面板</div>#}
+{#    <div class="tab-pane fade" id="welfare">公益内容面板</div>#}
+{#</div>#}
+{##}
+{##}
+{#</div>#}
+{##}
+{#</body>#}
+{#<script>#}
+{#$(function(){#}
+{#    $("#myTab a").click(function(e){#}
+{#        e.preventDefault();#}
+{#        $(this).tab("show");#}
+{#    });#}
+{#})#}
+{#</script>#}
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+{#<script src="../jquery-1.10.1.min.js"></script>#}
+{#<script src="../bootstrap.min.js"></script>#}
+{#<link rel="stylesheet" href="../bootstrap.min.css">#}
+
+{#    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.min.css">#}
+{#    <script src="/static/js/pub/jquery.min.js"></script>#}
+{#    <script src="/static/js/pub/bootstrap.min.js"></script>#}
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+    <script src="/static/js/pub/bootstrap-treeview.js"></script>
+</head>
+<body style="">
+<!-- 选项卡菜单-->
+<ul id="myTab" class="nav nav-pills" role="tablist">
+    <li class="active"><a href="#bulletin" role="tab">公告</a></li>
+    <li><a href="#rule" role="tab">规则</a></li>
+    <li><a href="#forum" role="tab">论坛</a></li>
+    <li><a href="#security" role="tab">安全</a></li>
+    <li><a href="#welfare" role="tab">公益</a></li>
+</ul>
+<!-- 选项卡面板 -->
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade in active" id="bulletin">公告内容面板</div>
+    <div class="tab-pane fade" id="rule">规则内容面板</div>
+    <div class="tab-pane fade" id="forum">论坛内容面板</div>
+    <div class="tab-pane fade" id="security">安全内容面板</div>
+    <div class="tab-pane fade" id="welfare">公益内容面板</div>
+</div>
+<script>
+$(function(){
+    $("#myTab a").click(function(e){
+        e.preventDefault();
+        $(this).tab("show");
+    });
+})
+</script>
+
+
+</body></html>

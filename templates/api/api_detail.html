@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用例详情</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-directional-buttons.min.css">
+{#    <link rel="stylesheet" type="text/css" href="/static/css/api/api_detail.css"/>#}
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+{#    <script src="/static/js/pub/bootstrap-treeview.js"></script>#}
+
+    <style>
+        .nav > li > a{
+            color: mediumaquamarine;
+            font-weight: bold;
+        }
+
+        .tab_li_color_show{
+            color: darkturquoise !important;
+            /*border-top-color: darkturquoise;*/
+            /*border-top-style: solid;*/
+            /*border-top-width: 2px;*/
+            /*border-left-color: darkturquoise;*/
+            /*border-left-style: solid;*/
+            /*border-left-width: 2px;*/
+            /*border-right-color: darkturquoise;*/
+            /*border-right-style: solid;*/
+            /*border-right-width: 2px;*/
+            border-bottom-color: darkturquoise;
+            border-bottom-style: solid;
+            border-bottom-width: 3px;
+        }
+
+        .treeview li{
+            height: 34px;
+            padding: 7px 10px;
+        }
+
+        .treeview{
+            max-height: 800px;
+            overflow-y: auto;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .treeview ul{
+            margin-bottom: 0;
+        }
+
+        .breadcrumb{
+            text-align: center;
+            padding: 0;
+            margin-left: 5px;
+            margin-bottom: 0;
+            list-style: none;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div id="wrap" style="margin-top:30px">
+
+    <form id="req_form" enctype="multipart/form-data" style="margin-top: 10px">
+        {% csrf_token %}
+{#            <input type="hidden" id="project_id" name="project_id">#}
+{#            <input type="hidden" id="group_id" name="group_id">#}
+        <input type="hidden" id="api_id" name="api_id">
+        <input type="hidden" id="case_id" name="case_id">
+
+        <div class="col-sm-12">
+            <div class="col-sm-12">
+            <div id="global_div" class="div_border height54">
+{#                    <div class="col-sm-3 fl input-group">#}
+{#                        <span class="input-group-addon" title="点击查看详情">#}
+{#                            <a href="/admin/api/globalhost/" target="_blank">全局域名:</a></span>#}
+{#                        <select id="global_host_select" name="global_host_id" class="form-control"></select>#}
+{#                    </div>#}
+{##}
+{#                    <div class="col-sm-3 fl input-group">#}
+{#                        <span class="fl">&nbsp;</span>#}
+{#                        <span class="input-group-addon" title="点击查看详情">#}
+{#                            <a href="/admin/api/globalvariable/" target="_blank">全局变量:</a></span>#}
+{#                        <select id="global_variable_select" name="global_variable_id" class="form-control"></select>#}
+{#                    </div>#}
+{##}
+{#                    <div class="col-sm-3 fl input-group">#}
+{#                        <span class="fl">&nbsp;</span>#}
+{#                        <span class="input-group-addon" title="点击查看详情">#}
+{#                            <a href="/admin/api/globalheader/" target="_blank">全局请求头:</a></span>#}
+{#                        <select id="global_header_select" name="global_header_id" class="form-control"></select>#}
+{#                    </div>#}
+{##}
+{#                    <div class="col-sm-3 fl input-group">#}
+{#                        <span class="fl">&nbsp;</span>#}
+{#                        <span class="input-group-addon" title="点击查看详情">#}
+{#                            <a href="/admin/api/globalcookie/" target="_blank">全局cookie:</a></span>#}
+{#                        <select id="global_cookie_select" name="global_cookie_id" class="form-control"></select>#}
+{#                    </div>#}
+{#                    #}
+                <div class="col-sm-6 input-group fl padding_r_20">
+                    <span class="input-group-addon strong" title="当前用例">当前用例：</span>
+                    <select id="case_select" name="case_select" class="form-control"></select>
+                </div>
+                <div class="col-sm-3 fl input-group">
+                    <span class="fl">&nbsp;</span>
+                    <span class="input-group-addon" title="点击查看详情">
+                        <a href="/admin/api/globalenv/" target="_blank" class="strong">全局环境:</a></span>
+                    <select id="global_env_select" name="global_env_id" class="form-control"></select>
+                </div>
+
+            </div>
+            </div>
+
+
+        </div>
+
+        <div class="case_div">
+
+        <!-- 选择测试用例,测试标题,描述部分,请求地址-->
+
+        <div class="col-sm-12">
+
+            <div class="col-sm-12">
+            <div class="div_border">
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                    <th class="bg_color3">
+                    {#<div class="bg_color3 margin_bottom_10">#}
+{#                        <div class="col-sm-2 fl input-group" style="margin-left: -10px">#}
+{#                            <span class="fl">&nbsp;</span>#}
+{#                            <span class="input-group-addon" title="点击查看详情">#}
+{#                                <a href="/admin/#/admin/api/globalenv/" target="_blank">全局环境:</a></span>#}
+{#                            <select id="global_env_select" name="global_env_id" class="form-control"></select>#}
+{#                        </div>#}
+{#                        <div class="col-sm-2 input-group fl padding_r_20" style="margin-left:5px">#}
+{#                            <span class="input-group-addon" title="当前用例">当前用例：</span>#}
+{#                            <select id="case_select" name="case_select" class="form-control"></select>#}
+{#                        </div>#}
+
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="case_status" name="case_status" checked="checked">
+                        <strong>启用&nbsp;&nbsp;</strong>
+                    </label>
+
+                    <input type="button" class="btn btn-info" id="newCase"
+                            value="清空" >
+                    <input type="button" class="btn btn-danger" id="deleteCase"
+                            value="删除" >
+                    <input type="button" class="btn btn-warning" id="updateCase"
+                            value="更新" >
+                    <input type="button" class="btn btn-primary" id="saveCase"
+                            value="新增" >
+                    <input type="button" class="btn btn-default" id="lastCase"
+                            value="上一个">
+                    <input type="button" class="btn btn-default" id="nextCase"
+                            value="下一个">
+                    <input type="button" class="btn btn-success send_req" id="send_req"
+                            value="发送请求" >
+                    <div class="fr margin_top_6">
+                        <span class="color2">最后更新:</span>
+                        <span class="label label-info" id="latest_update_user"></span>
+                        <span class="label label-info" id="u_date"></span>
+                    </div>
+{#                </div>#}
+                    </th>
+                    </tr>
+                    </thead>
+                </table>
+
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12">
+
+            <div class="col-sm-12">
+            <div class="div_border">
+
+                <div class="margin_bottom_20 height34">
+                    <div class="col-sm-4 fl input-group padding_r_20">
+                        <span class="input-group-addon strong">
+                            <span class="color_red">* </span>标题:</span>
+                        <input type="text" autocomplete="off" required
+                               id="case_title" name="case_title" class="form-control">
+                    </div>
+                    <div class="col-sm-4 fl input-group padding_r_20">
+                        <span class="input-group-addon strong">
+                            <span class="color_red">* </span>地址:</span>
+                        <input type="text" autocomplete="off" required
+                               id="url" name="url" class="form-control">
+                    </div>
+                    <div class="col-sm-4 fl input-group padding_r_20">
+                        <span class="input-group-addon">描述:</span>
+                        <input type="text" autocomplete="off"
+                               id="case_desc" name="case_desc" class="form-control">
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12">
+
+            <div class="col-sm-12">
+            <ul id="caseTab" class="nav nav-pills bg_color3" role="tablist">
+                <li><a class="tab_li_color_show active show" href="#params_part" role="tab">
+                    请求参数 & 样例数据 & 响应体 & 断言 & 实际请求参数</a></li>
+                <li><a href="#headers_part" role="tab">请求头 & 响应头</a></li>
+                <li><a href="#cookies_part" role="tab">请求cookies & 响应cookies</a></li>
+                <li><a href="#prefix_part" role="tab">前置操作</a></li>
+                <li><a href="#rsg_part" role="tab">后置操作</a></li>
+            </ul>
+            <br>
+            </div>
+
+        </div>
+
+        <div id="caseTabContent" class="tab-content tab-content">
+
+            <!-- 请求参数 & 样例数据 & 响应体 & 断言 & 实际请求参数 -->
+            <div id="params_part" class="div_border tab-pane in fade active show">
+
+            <!--请求参数&样例数据-->
+            <div class="col-sm-12" >
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="3">请求参数(url参数):</th>
+                        </tr>
+{#                            <tr>#}
+{#                                <td class="" width="40%">参数名称</td>#}
+{#                                <td class="" width="50%">参数值</td>#}
+{#                                <td class="" width="10%">操作</td>#}
+{#                            </tr>#}
+                        </thead>
+                        <tbody id="param_tbody">
+                        <tr id="param_mark">
+                            <td colspan="3">
+                                <button type="button" class="btn btn-info addParamenter">添加参数</button>
+                                <button type="button" class="btn btn-info" id="switch_json">键值对转换成json格式</button>
+                                <button type="button" class="btn btn-info" id="switch_kv">json格式转换成键值对</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+            <!-- 断言 -->
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="7">断言设置:</th>
+                            </tr>
+{#                                <tr>#}
+{#                                    <td class="" width="8%">状态</td>#}
+{#                                    <td class="" width="20%">变量路径</td>#}
+{#                                    <td class="" width="20%">期望值</td>#}
+{#                                    <td class="" width="8%">断言方式</td>#}
+{#                                    <td class="" width="20%">实际值</td>#}
+{#                                    <td class="" width="14%">断言结果</td>#}
+{#                                    <td class="" width="10%">操作</td>#}
+{#                                </tr>#}
+                        </thead>
+                        <tbody id="verify_tbody">
+                            <tr id="verify_mark">
+                                <td colspan="7">
+                                    <button type="button" class="btn btn-info add_verify_tr">添加断言</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+            <!-- 请求体&响应体 -->
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="bg_color3 line34" width="50%"><strong>请求体</strong></th>
+                            <th class="bg_color3 line34" width="50%"><strong>响应体</strong>
+                                <button style="float: right;" type="button"
+                                        class="btn btn-success send_req">发送请求</button>
+                                <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+
+                                <span class="label label-info" id="res_time"
+                                      style="float: right; margin-top: 8px"></span>
+
+                                <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+
+                                <span class="label label-info" id="status_code"
+                                      style="float: right; margin-top: 8px"></span>
+
+                                <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+
+                                <span id="res_erro" style="float: right; color: red;"></span>
+
+                                <span style="float: right;">&nbsp;&nbsp;&nbsp;</span>
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td>
+                                <textarea id="params" class="form-control textarea_h400"
+                                          name="params" placeholder='输入json格式参数,如:
+{
+"id":"123",
+"entname":"{ {entname}}",
+"regno":"456",
+"creditcode":"{ {creditcode}}"
+}'></textarea>
+                            </td>
+                            <td>
+                                <textarea class="form-control textarea_h400" id="res_body"
+                                          placeholder="响应体" readonly></textarea>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+
+
+            </div>
+            <!-- 实际请求参数&样例数据 -->
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="bg_color3 line34"><strong>样例数据</strong>
+                                    <input type="button" class="btn btn-info"
+                                           id="excel_json_auto_switch"
+                                           value="excel与json互转" title="excel格式与json格式智能转换">
+                                </th>
+                                <th class="bg_color3 line34"><strong>实际请求参数</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody id="verify_tbody">
+                            <tr>
+                                <td>
+                                    <textarea id="sample_data" class="form-control textarea_h400"
+                                              name="sample_data"
+                                              placeholder="输入批量测试数据,从excel粘贴,或同等格式,如:
+id	name
+1	张一
+2	张二
+3	张三
+4	李四
+5	王五"></textarea>
+                                </td>
+                                <td>
+                                    <textarea class="form-control textarea_h400" id="real_data"
+                                              placeholder="实际的请求体 " readonly></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            </div>
+
+
+            <!--请求头&响应头 部分-->
+            <div id="headers_part" class="div_border tab-pane in fade">
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="3">请求头参数：</th>
+                        </tr>
+{#                            <tr>#}
+{#                                <td width="40%">Header名称</td>#}
+{#                                <td width="50%">Header值</td>#}
+{#                                <td width="10%">操作</td>#}
+{#                            </tr>#}
+                    </thead>
+                    <tbody id="header_tbody">
+                    <tr id="header_mark">
+                        <td colspan="3">
+                            <button type="button" k="headKeys" v="headValues"
+                                    class="btn btn-info" id="addHeadParamenter">添加参数
+                            </button>
+                            <button type="button" class="btn btn-info" id="addContentType_json">
+                                添加Content-Type: application/json
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+            </div>
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="bg_color3">响应头</th>
+                    </tr>
+                    </thead>
+                    <tbody id="header_tbody">
+                    <tr>
+                        <td>
+                            <textarea class="form-control textarea_h400" name="res_headers" id="res_headers" placeholder="响应头" readonly></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+
+            </div>
+
+            </div>
+
+
+            <!-- 请求cookies & 响应cookies -->
+            <div id="cookies_part" class="div_border tab-pane in fade">
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="bg_color3" style="width: 50%;">json格式cookies</th>
+                        <th class="bg_color3" style="width: 50%;">响应cookies</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <textarea class="form-control textarea_h400" name="cookies" id="cookies" placeholder="json格式cookies"></textarea>
+                        </td>
+                        <td>
+                            <textarea class="form-control textarea_h400" name="res_cookies" id="res_cookies" placeholder="响应cookies" readonly></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+
+            </div>
+
+            </div>
+
+            <!-- 前置操作 -->
+            <div id="prefix_part" class="div_border tab-pane in fade">
+
+            <!--前置操作-->
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                <div id="prefix_part" class="div_border tab-pane in fade">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="6">通用例id 调用用例 获取响应数据:</th>
+                            </tr>
+{#                                <tr>#}
+{#                                    <td class="" width="8%">状态</th>#}
+{#                                    <td class="" width="10%">调用用例id</td>#}
+{#                                    <td class="" width="10%">设置变量名</td>#}
+{#                                    <td class="" width="30%">变量路径</td>#}
+{#                                    <td class="" width="32%">实际值</td>#}
+{#                                    <td class="" width="10%">操作</td>#}
+{#                                </tr>#}
+                        </thead>
+                        <tbody id="prefix_tbody">
+                            <tr id="prefix_mark">
+                                <td colspan="6">
+                                    <button type="button" class="btn btn-info add_prefix_tr">添加</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+            </div>
+
+            </div>
+
+            <!--响应设置全局变量 Response sets global variables   rsgv-->
+            <div id="rsg_part" class="div_border tab-pane in fade">
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <div style="height: 50px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="set_global_cookies" name="set_global_cookies">
+                        <strong>响应cookies全部设置到当前全局cookies中&nbsp;&nbsp;</strong>
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="clear_global_cookies" name="clear_global_cookies">
+                        <strong>清空全局cookies&nbsp;&nbsp;</strong>
+                    </label>
+                </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="bg_color3" colspan="6">
+                                <strong>响应体中的参数设置到全局变量:</strong></th>
+                        </tr>
+{#                            <tr>#}
+{#                                <td class="" width="10%">状态</td>#}
+{#                                <td class="" width="20%">变量名称</td>#}
+{#                                <td class="" width="10%">添加方式</td>#}
+{#                                <td class="" width="25%">变量路径</td>#}
+{#                                <td class="" width="25%">实际值</td>#}
+{#                                <td class="" width="10%">操作</td>#}
+{#                            </tr>#}
+                    </thead>
+                    <tbody id="rsgv_tbody">
+                        <tr id="rsgv_mark">
+                            <td colspan="6">
+                                <button type="button" class="btn btn-info add_rsgv_tr">添加</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12">
+
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="bg_color3" colspan="6">
+                                <strong>响应体中的参数设置到全局请求头:</strong>
+                            </th>
+                        </tr>
+{#                            <tr>#}
+{#                                <td class="" width="10%">状态</td>#}
+{#                                <td class="" width="20%">变量名称</td>#}
+{#                                <td class="" width="10%">添加方式</td>#}
+{#                                <td class="" width="25%">变量路径</td>#}
+{#                                <td class="" width="25%">实际值</td>#}
+{#                                <td class="" width="10%">操作</td>#}
+{#                            </tr>#}
+                    </thead>
+                    <tbody id="rsgh_tbody">
+                        <tr id="rsgh_mark">
+                            <td colspan="6">
+                                <button type="button" class="btn btn-info add_rsgh_tr">添加</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+            </div>
+
+            </div>
+        </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+<script src="/static/js/pub/pub.js"></script>
+<script src="/static/js/api/api_detail.js"></script>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试任务组</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+
+    <script type="text/javascript" src="/static/js/pub/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/pub/popper.min.js"></script>
+    <script type="text/javascript" src="/static/js/pub/bootstrap.js"></script>
+
+</head>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<style>
+    .Main{
+        width: 95%;
+        margin: auto;
+    }
+    .main{
+        width: 100%;
+        margin-top: 15px;
+    }
+    #task_group_info_part thead{
+        font-weight: bold;
+    }
+    #task_group_info_part{
+        margin-top: 5px;
+    }
+    #add_test_task_panel .panel-body tr td:first-child, #test_task_detail_panel .panel-body tr td:first-child{
+        text-align: right;
+    }
+    #add_test_task_panel tbody, #update_test_task_panel tbody, #test_task_detail_panel tbody{
+        padding: 10px 50px;
+    }
+    .content{
+        max-width: 300px;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+    .width_200{
+        max-width: 200px;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+</style>
+
+<body>
+
+<div class="pop_panels">
+
+    {# 新增测试任务组框 #}
+    <div id="add_task_group_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">新增测试任务组</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="fr"><span style="color: red;">* </span>任务组名称：</td>
+                            <td>
+                                <input type="text" class="form-control title">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr">任务组描述：</td>
+                            <td>
+                                <input type="text" class="form-control desc">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>所属项目:</td>
+                            <td>
+                                <select class="form-control project"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr"><span style="color: red;">* </span>测试任务id：</td>
+                            <td>
+                                <input type="text" placeholder='多个id用 " , " 分隔'
+                                       class="form-control test_task_id_list">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr">cron表达式：</td>
+                            <td>
+                                <input type="text" placeholder='秒 分 时 天 月 周'
+                                       class="form-control cron">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-info close_pop_panel">返回</button>
+                <button type="button" class="btn btn-primary" id="add_task_group_submit">新增</button>
+            </div>
+        </div>
+    </div>
+
+    {# 编辑测试任务框 #}
+    <div id="update_task_group_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">编辑测试任务组</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="fr"><span style="color: red;">* </span>任务组名称：</td>
+                            <td>
+                                <input type="text" class="form-control title">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr">任务组描述：</td>
+                            <td>
+                                <input type="text" class="form-control desc">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>所属项目:</td>
+                            <td>
+                                <select class="form-control project"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr"><span style="color: red;">* </span>测试任务id：</td>
+                            <td>
+                                <input type="text" placeholder='多个id用 " , " 分隔'
+                                       class="form-control test_task_id_list">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fr">cron表达式：</td>
+                            <td>
+                                <input type="text" placeholder='秒 分 时 天 月 周'
+                                       class="form-control cron">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-info close_pop_panel">返回</button>
+                <button type="button" class="btn btn-primary" id="update_task_group_submit">更新</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="Main">
+
+    <div class="">
+
+        <div class="main">
+            <div style="height: 40px;">
+                <div class="fl">
+                    <button type="button" id="add_test_task_group" class="btn btn-primary" value="">新增测试任务组</button>&nbsp;&nbsp;
+                </div>
+                <div class="col-sm-2 fl input-group">
+                <span class="input-group-addon strong" title="根据项目筛选">所属项目:</span>
+                    <select id="choose_project" name="choose_project" class="form-control"></select>
+                </div>
+{#            <div class="fr">#}
+{#                <button type="button" id="pause_cron_program" class="btn btn-info" value="">暂停定时程序</button>&nbsp;&nbsp;#}
+{#                <button type="button" id="resume_cron_program" class="btn btn-info" value="">恢复定时程序</button>&nbsp;&nbsp;#}
+{#            </div>#}
+            </div>
+            <table id="task_group_info_part" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="bg_color1">
+                        <td style="max-width: 5%">id</td>
+                        <td style="max-width: 15%">任务组名称</td>
+                        <td style="max-width: 20%">描述</td>
+                        <td style="max-width: 20%">测试任务</td>
+                        <td style="max-width: 8%">cron表达式</td>
+                        <td style="max-width: 10%">下次执行时间</td>
+                        <td style="max-width: 30%">操作</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script type="text/javascript" src="/static/js/api/test_task_group.js"></script>
+</html>

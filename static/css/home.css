@@ -1,0 +1,43 @@
+
+.product_map { background-color: #fff; }
+
+.product_map .content_map_head {padding: 4rem;/* font-size: 36px; */color: rgb(55, 61, 65);text-align: center;}
+
+/*.product_map .content_map_list { max-width: 1140px; padding: 2.5rem; margin: 4rem 5rem; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 10px 0px;}*/
+.product_map .content_map_list { width: 80%; margin: auto; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 10px 0px;}
+
+.product_map .content_map_list > div{height:auto}
+
+.product_map .content_map_list > div:first-of-type .content_map_list_head { margin-top: 0px; }
+
+.product_map .content_map_list .list {margin-bottom: 100px; }
+
+.product_map .content_map_list_head { clear: both; font-size: 1.5rem; color: rgb(55, 61, 65); position: relative; margin-top: 10px; margin-bottom: 10px; }
+
+.product_map .content_map_list_head .line { width: 100%; border-bottom: 1px solid rgb(219, 223, 228); position: absolute; top: 50%; margin-top: 1px; }
+
+.product_map .content_map_list_head .content_map_list_head_con { display: inline-block; background: rgb(255, 255, 255); position: relative; padding-right: 1.4rem; }
+
+.product_map .content_map_list_head img, .product_map .content_map_list_head span { vertical-align: middle; }
+
+.product_map .content_map_list_head img { width: 1.875rem; height: 1.875rem; }
+
+.product_map .list { clear: both; height:auto; color: rgb(131, 140, 163);}
+
+.content{ padding: 1.437rem 0px 1.437rem 2.5rem; border-right: 1px solid rgb(219, 223, 228); float: left; cursor: pointer; height: auto}
+
+.product_map .list > div:last-of-type { border: 0px; }
+
+.content:hover { background: rgb(219, 223, 228); color: rgb(55, 61, 65);}
+
+.product_map .list_head { font-size: 20px; }
+
+.about .join .accordion img, .about .join .accordion span, .bank_data .banner .processed i, .bank_data .banner .processed span, .enterprise_certification .contactUsList span, .product_map .list_head img, .product_map .list_head span { vertical-align: middle; }
+
+.product_map .list_head img { width: 2.5rem; height: 2.5rem; }
+
+.product_map .list_content { font-size: 1.125rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 36px;}
+
+
+
+

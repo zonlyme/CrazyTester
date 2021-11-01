@@ -1,0 +1,285 @@
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>接口自动化测试平台 - 首页</title>
+
+<link rel="stylesheet" href="/static/css/pub/materialize.min.css" media="screen,projection">
+<link rel="stylesheet" href="/static/css/pub/bootstrap.css">
+<link rel="stylesheet" href="/static/css/pub/font-awesome.css">
+<link rel="stylesheet" href="/static/css/pub/reset.css">
+<link rel="stylesheet" href="/static/css/pub/custom-styles.css">
+
+<script src="/static/js/pub/jquery.min.js"></script>
+<script src="/static/js/pub/bootstrap.min.js"></script>
+<script src="/static/js/pub/materialize.min.js"></script>
+<script src="/static/js/pub/jquery.metisMenu.js"></script>
+
+</head>
+
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<nav class="navbar navbar-default top-navbar" role="navigation">
+
+    <div class="navbar-header col-sm-3" style="padding: 0">
+        <a class="navbar-brand waves-effect waves-dark" href="/html/index">
+            <strong>接口自动化测试平台</strong></a>
+        <div id="sideNav" href="">
+        </div>
+    </div>
+
+    <div class="col-sm-6" id="header_middle"></div>
+
+    <div class="col-sm-3">
+        <ul class="nav navbar-top-links navbar-right" style="margin-right: 0">
+            <li style="margin-right: 50px"><a class="dropdown-button waves-effect waves-dark" href="#!"
+                                              data-activates="dropdown2"><i class="fa fa-tasks fa-fw"></i> <i
+                    class="material-icons right">切换</i></a>
+                <ul id="dropdown2" class="dropdown-content w250">
+                    <li>
+                        <a href="/">
+                            <div>
+                                <i class="fa fa-hand-o-right fa-fw"></i> 接口自动化测试平台
+                                <span class="pull-right text-muted small">进入</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="http://10.39.100.170:8000/" target="_blank">
+                            <div>
+                                <i class="fa fa-hand-o-right fa-fw"></i> U I 自动化测试平台
+                                <span class="pull-right text-muted small">进入</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+            <li style="margin-right: 0px"><a class="dropdown-button waves-effect waves-dark" href="#!"
+                                             data-activates="dropdown1"><i class="fa fa-user fa-fw"></i> <b
+                    id="user_name"></b> </a>
+                <ul id="dropdown1" class="dropdown-content">
+                    <li><a href="#"><i class="fa fa-user fa-fw" id="logout"></i> 退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</nav>
+<!-- Dropdown Structure -->
+
+<!--/. NAV TOP  active-menu -->
+<nav class="navbar-default navbar-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="main-menu">
+
+            <li>
+                <a href="/html/api/staticitem" class="waves-effect waves-dark" target="iframe_html">
+                    <i class="fa fa-bar-chart-o"></i> 系统看板</a>
+            </li>
+
+            <li>
+                <a href="/html/api/home" class="waves-effect waves-dark" target="iframe_html">
+                    <i class="fa fa-sitemap"></i> 用例管理 </a>
+            </li>
+
+            <li>
+                <a href="#" class="waves-effect waves-dark">
+                    <i class="fa fa-fw fa-bookmark-o"></i> 任务&报告<span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="/html/api/test_task" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>任务管理</a>
+                    </li>
+                    <li>
+                        <a href="/html/api/test_task_group" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>任务组管理</a>
+                    </li>
+                    <li>
+                        <a href="/html/api/test_report_list" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>测试报告</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" class="waves-effect waves-dark">
+                    <i class="fa fa-edit"></i> 全局配置<span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="/admin/api/globalenv/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>全局环境</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/globalhost/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>全局域名</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/globalvariable/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>全局变量</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/globalheader/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>全局请求头</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/globalcookie/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>全局cookie</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a class="waves-effect waves-dark">
+                    <i class="fa fa-fw fa-file"></i> 报告配置<span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="/admin/api/workwxusergroup/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>企业微信【用户组】</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/workwxgroupchat/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>企业微信【群】</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/workwxapply/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>企业微信【应用】</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/emailusergroup/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>邮箱【用户组】</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="waves-effect waves-dark">
+                    <i class="fa fa-fw fa-file"></i> 报表测试<span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="/html/api/report_form" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>报表测试</a>
+                    </li>
+                    <li>
+                        <a href="/admin/api/reportform/" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>报表管理</a>
+                    </li>
+                    <li>
+                        <a href="/html/api/report_form_result" target="iframe_html">
+                            <i class="fa fa-hand-o-right"></i>测试记录</a>
+                    </li>
+{#                    <li>#}
+{#                        <a href="/html/api/rf_task" target="iframe_html">#}
+{#                            <i class="fa fa-hand-o-right"></i>任务管理</a>#}
+{#                    </li>#}
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+
+    <div style="height: 200px; width: 100%"></div>
+</nav>
+
+<div id="page-wrapper">
+
+    <iframe src="" name="iframe_html" id="iframe_html"></iframe>
+
+</div>
+
+<script src="/static/js/pub/pub.js"></script>
+
+<script>
+
+    $("#dropdown1").click(function () {
+
+        console.log("点击了退出！")
+        $.get('/accounts/logout', {}, function (r_data) {
+            location.reload();
+        })
+    });
+
+    var get_user_info = function () {
+        url = '/get_user_info';
+        $.post(url, {}, function (r_data) {
+            if (r_data.ret) {
+                $("#user_name").html(r_data.user_name);
+            }
+            else {
+                pop_danger(r_data.msg);
+            }
+        })
+    };
+
+    // 收起菜单栏
+    var mainApp = {
+
+        initFunction: function () {
+            /*MENU
+            ------------------------------------*/
+            $('#main-menu').metisMenu();
+
+            $(window).bind("load resize", function () {
+                if ($(this).width() < 768) {
+                    $('div.sidebar-collapse').addClass('collapse')
+                } else {
+                    $('div.sidebar-collapse').removeClass('collapse')
+                }
+            });
+        },
+
+        initialization: function () {
+            mainApp.initFunction();
+        }
+    }
+
+    // 地址栏同步地址
+    $("#main-menu a").click(function (){
+        if ($(this).attr("href") !== "#"){
+            var u = add_url_params("index_flag", "1", $(this).attr("href"))
+            {#console.log($(this).attr("href"), u)#}
+            window.history.pushState(null,null,u);
+            $('#header_middle').html("");
+        }
+    })
+
+    $(document).ready(function () {
+        $(".dropdown-button").dropdown();
+        $("#sideNav").click(function(){
+            if($(this).hasClass('closed1')){
+                $('.navbar-side').animate({left: '0px'});
+                $(this).removeClass('closed1');
+                $('#page-wrapper').animate({'margin-left' : '200px'});
+            }
+            else{
+                $(this).addClass('closed1');
+                $('.navbar-side').animate({left: '-200px'});
+                $('#page-wrapper').animate({'margin-left' : '0px'});
+            }
+        });
+
+        mainApp.initFunction();
+        document.getElementById("page-wrapper").style.maxHeight= window.innerHeight - 62 + 'px';
+
+        // 让iframe框加载路径对应页面
+        var u = GetUrlRelativePath()    // 相对路径
+        if (u != "/html/index"){
+            document.getElementById("iframe_html").contentWindow.location.reload(true);
+            document.getElementById("iframe_html").src = add_url_params("index_flag", "0")
+        }
+    });
+
+get_user_info()
+
+
+</script>
+
+</body>
+
+</html>

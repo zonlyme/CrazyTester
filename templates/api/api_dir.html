@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分组&接口</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+{#    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">#}
+
+    <script src="/static/js/pub/jquery.min.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+{#    <script src="/static/js/pub/bootstrap-treeview.js"></script>#}
+
+    <style>
+        .treeview{
+{#            max-height: 500px;#}
+            overflow-y: auto;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .treeview ul{
+            margin-bottom: 0;
+        }
+        .apis_part_div{
+{#            max-height: 762px;#}
+            overflow-y: auto;
+        }
+        #apis_part_header{
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+        #apis_part{
+            margin-bottom: 0;
+        }
+        #apis_part_header{
+            font-size: 13px;
+        }
+        #apis_part_div{
+            font-size: 13px;
+        }
+
+    </style>
+</head>
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div>
+
+    <div class="Main">
+
+        <!-- 左侧treeview -->
+        <div id="Nav" class="col-sm-3">
+            <div>
+                <input type="hidden" id="project_id" name="project_id">
+                <button type="button" id="add_group_button" class="btn btn-primary">新增</button>
+                <button type="button" id="update_group_button" class="btn btn-warning">编辑</button>
+                <button type="button" id="delete_group_button" class="btn btn-danger">删除</button>
+                <button type="button" id="download_group_button" class="btn btn-info">下载用例</button>
+{#                    <button type="button" id="upload_case" class="btn btn-info">上传用例</button>#}
+            </div>
+            <script src="/static/js/pub/bootstrap-treeview.js"></script>
+            <div id="treeview" class="treeview"></div>
+        </div>
+
+        <div class="col-sm-9 div_border tab-pane in fade active">
+            <button type="button" id="add_api" class="btn btn-primary" value="">新增接口</button>
+
+            <table id="apis_part_header" class="table table-bordered table-striped table-hover">
+                <thead>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="apis_part_div" id="apis_part_div">
+                <table id="apis_part" class="table table-bordered table-striped table-hover">
+                    <thead>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <a href="" id="dl" target="_blank"><span></span></a>
+
+    </div>
+
+</div>
+
+
+<!-- 分组操作框  -->
+<div id="add_group_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">新增分组</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="30%"><span class="line34 fr">分组名称:</span>
+                        </td>
+                        <td width="70%"><input type="text" placeholder='分组名称'
+                                   class="form-control" id="add_group_title">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-primary" id="add_group_submit">新增</button>
+        </div>
+    </div>
+</div>
+
+<div id="update_group_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">分组操作</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="30%"><span class="line34 fr">选择分组:</span></td>
+                        <td width="70%">
+                            <select class="form-control" id="update_group_select"></select></td>
+                    </tr>
+                    <tr>
+                        <td width="30%"><span class="line34 fr">新名称：</span>
+                        </td>
+                        <td width="70%">
+                            <input type="text" placeholder='新名称：' class="form-control" id="update_group_title">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-warning" id="update_group_submit">更新</button>
+        </div>
+    </div>
+</div>
+
+<div id="delete_group_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">删除分组</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="30%"><span class="line34 fr">选择分组:</span></td>
+                        <td width="70%">
+                            <select class="form-control" id="delete_group_select"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-danger" id="delete_group">删除</button>
+        </div>
+    </div>
+</div>
+
+<div id="download_group_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">下載分组下所有用例</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="30%"><span class="line34 fr">选择分组:</span></td>
+                        <td width="70%">
+                            <select class="form-control" id="download_group_select"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-primary" id="download_group">下载</button>
+        </div>
+    </div>
+</div>
+
+<!-- api新增操作框  -->
+<div id="add_api_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">新增接口</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><span class="fr">所属分组:</span></td>
+                        <td>
+                            <select id="group_select" name="groups" class="form-control">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="fr">请求方式:</span></td>
+                        <td>
+                            <select id="method" class="form-control">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="fr">接口名称:</span></td>
+                        <td><input type="text" class="form-control" id="api_title"></td>
+                    </tr>
+                    <tr>
+                        <td><span class="fr">接口描述:</span></td>
+                        <td><input type="text" class="form-control" id="api_desc"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-primary" id="add_api_submit">新增</button>
+        </div>
+    </div>
+</div>
+
+<!-- api更新操作框  -->
+<div id="update_api_panel" class="pop_panel custom_panel" style="display: none;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center">更新接口</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><span class="fr">请求方式:</span></td>
+                        <td>
+                            <select id="update_method" class="form-control">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="fr">接口名称:</span></td>
+                        <td>
+                            <input type="text" placeholder='接口名称'
+                                   class="form-control" id="update_api_title">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="fr">接口描述:</span></td>
+                        <td>
+                            <input type="text" placeholder='接口描述'
+                                   class="form-control" id="update_api_desc">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="text-align: right">
+            <button type="button" class="btn btn-default close_pop_panel">返回</button>
+            <button type="button" class="btn btn-warning" id="update_api_submit">更新</button>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script type="text/javascript" src="/static/js/api/api_dir.js"></script>
+
+</html>

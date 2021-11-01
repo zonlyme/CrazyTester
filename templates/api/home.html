@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>接口自动化测试平台 - 首页</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+
+    <script src="/static/js/pub/jquery.min.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+
+</head>
+
+<body class="product_map">
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div class="pops">
+
+    <div id="add_project_panel" class="pop_panel custom_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">新增项目</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><span class="fr line34">项目名称:</span></td>
+                            <td><input type="text" maxlength="9" class="form-control project_title"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-default close_pop_panel">返回</button>
+                <button type="button" class="btn btn-default" id="add_project_submit">新增</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="update_project_panel" class="pop_panel custom_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">编辑项目</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><span class="fr line34">项目名称:</span></td>
+                            <td><input type="text" maxlength="9" class="form-control project_title"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-default close_pop_panel">返回</button>
+                <button type="button" class="btn btn-default" id="update_project_submit">更新</button>
+            </div>
+        </div>
+    </div>
+
+    {# 上传用例弹出框 #}
+    <div id="upload_case_panel" class="pop_panel custom_panel" style="display: none">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title">上传excel测试用例</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <input type="file" name="case_file" id="case_file"/>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-primary close_pop_panel">返回</button>
+                <button type="button" class="btn btn-default" id="submit_upload_case">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="page-wrapper">
+
+<div id="page-inner">
+
+    <div class="content_map">
+        <div class="content_map_list">
+            <div>
+                <div class="content_map_list_head">
+                    <div class="line"></div>
+                    <div class="content_map_list_head_con">
+                        <img src="/static/img/pub/dayuImg.png" alt="">
+                        <span>项目列表</span>
+                    </div>
+                    <div class="content_map_list_head_con fr">
+                    &nbsp;&nbsp;
+                    <button type="button" id="add_project" class="btn btn-info" style="display: none">新增项目</button>
+                    &nbsp;&nbsp;
+                     <button type="button" id="upload_case" class="btn btn-success">上传excel用例</button>
+                    &nbsp;&nbsp;
+                    <a href="/admin/api/apiproject/">
+                    <button type="button" id="project_config" class="btn btn-warning" style="display: none">项目配置</button></a>
+                </div>
+                </div>
+
+                <div class="list" id="projects">
+                </div>
+            </div>
+{#            <div>#}
+{#                <div class="content_map_list_head">#}
+{#                    <div class="line"></div>#}
+{#                    <div class="content_map_list_head_con">#}
+{#                        <img src="/static/img/pub/dayuImg.png" alt="">#}
+{#                        <span>测试任务&测试报告</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="list">#}
+{#                    <div class="content col-sm-3" id="batch_test_div1">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/html/api/test_task">#}
+{#                                测试任务</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3" id="batch_test_div1">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/html/api/test_task_group">#}
+{#                                测试任务组</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/html/api/test_report_list">#}
+{#                                测试报告</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/html/api/staticitem">#}
+{#                                项目概括</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span id="upload_case">上传excel用例</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div>#}
+{#                <div class="content_map_list_head">#}
+{#                    <div class="line"></div>#}
+{#                    <div class="content_map_list_head_con">#}
+{#                        <img src="/static/img/pub/dayuImg.png" alt="">#}
+{#                        <span>全局配置</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="list">#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/globalhost/">#}
+{#                                全局域名</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/globalvariable/">#}
+{#                                全局变量</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/globalheader/">#}
+{#                                全局请求头</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/globalcookie/">#}
+{#                                全局cookie</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/globalenv/">#}
+{#                                全局环境</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div>#}
+{#                <div class="content_map_list_head">#}
+{#                    <div class="line"></div>#}
+{#                    <div class="content_map_list_head_con">#}
+{#                        <img src="/static/img/pub/dayuImg.png" alt="">#}
+{#                        <span>报告接收配置</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="list">#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/workwxusergroup/">#}
+{#                                企业微信【用户组】</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/workwxgroupchat/">#}
+{#                                企业微信【群】</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/workwxapply/">#}
+{#                                企业微信【应用】</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="content col-sm-3">#}
+{#                        <div class="list_head">#}
+{#                            <img src="/static/img/pub/atlas.png" alt="">#}
+{#                            <span><a class="color2" href="/admin/api/emailusergroup/">#}
+{#                                邮箱【用户组】</a></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+</body>
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css"/>
+    <script src="/static/js/pub/pub.js"></script>
+    <script src="/static/js/api/home.js"></script>
+
+</html>

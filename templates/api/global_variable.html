@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全局cookie</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+
+</head>
+
+<body>
+
+<div id="zhe"></div>
+
+<div class="pop_panels">
+    {# 提示消息弹出框 #}
+    <div id="pop"></div>
+
+    {# api新增操作框 #}
+    <div id="add_openapiUser_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">新增用户</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td><span class="fr">标题:</span></td>
+                            <td><input type="text" class="form-control" id="add_openUser_title"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">UID:</span></td>
+                            <td><input type="text" class="form-control" id="add_UID"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">SECURITY_KEY:</span></td>
+                            <td><input type="text" class="form-control" id="add_SECURITY_KEY"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">X_Appid:</span></td>
+                            <td><input type="text" class="form-control" id="add_X_Appid"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-default close_pop_panel">返回</button>
+                <button type="button" class="btn btn-default" id="add_openapiUser_submit">新增</button>
+            </div>
+        </div>
+    </div>
+
+    {# api更新操作框 #}
+    <div id="update_openapiUser_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">更新用户</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td><span class="fr">标题:</span></td>
+                            <td><input type="text" class="form-control" id="update_openUser_title"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">UID:</span></td>
+                            <td><input type="text" class="form-control" id="update_UID"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">SECURITY_KEY:</span></td>
+                            <td><input type="text" class="form-control" id="update_SECURITY_KEY"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="fr">X_Appid:</span></td>
+                            <td><input type="text" class="form-control" id="update_X_Appid"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-default close_pop_panel">返回</button>
+                <button type="button" class="btn btn-default" id="update_openapiUser_submit">更新</button>
+            </div>
+        </div>
+    </div>
+
+    {# 确认提示框 #}
+    <div id="ycf-alert" class="modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">Close</span></button>
+                    <h5 class="modal-title"><i class="fa fa-exclamation-circle"></i> [Title]</h5>
+                </div>
+                <div class="modal-body small">
+                    <h4><strong>[Message]</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>
+                    <button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrap">
+    <!--头部部分-->
+    <script type="text/javascript" src="/static/js/pub/header.js"></script>
+
+    <div class="Main">
+
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10 div_border tab-pane in fade active">
+            <button type="button" id="add_openapiUser" class="btn btn-info" value="">新增角色信息</button>
+            <table id="openapiUser_info_part" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="bg_color2">
+                        <td>标题</td>
+                        <td>UID</td>
+                        <td>SECURITY_KEY</td>
+                        <td>X_Appid</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+
+</body>
+
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script>
+
+    var get_openapiUser = function () {
+        $.get('/api/get_openapiUser', function (res_data) {
+            if(res_data.ret){
+                set_info(res_data.data);
+            }
+            else{
+                pop_danger(res_data.msg);
+            }
+        });
+    };
+
+    var api_tr_html = function () {
+        /*
+         <tr>
+            <td class="title line34"></td>
+            <td class="UID line34"></td>
+            <td class="SECURITY_KEY line34"></td>
+            <td class="X_Appid line34"></td>
+            <td class="line34">
+                <button type="button" class="btn btn-info update_openapiUser">编辑</button>
+                <button type="button" class="btn btn-info delete_openapiUser">删除</button>
+            </td>
+        </tr>
+         */
+    };
+
+    var set_info = function (res_data) {
+        $("#openapiUser_info_part tbody").html("");
+        for(i in res_data){
+            title = '<a href="./api/'+res_data[i].id+'" target="_blank">'+res_data[i].title+'</a>';
+            api_tr = $(api_tr_html.getMultiLine());
+            api_tr.find(".title").html(res_data[i].title);
+            api_tr.find(".UID").html(res_data[i].UID);
+            api_tr.find(".SECURITY_KEY").html(res_data[i].SECURITY_KEY);
+            api_tr.find(".X_Appid").html(res_data[i].X_Appid);
+            api_tr.find(".update_openapiUser").attr("id", res_data[i].id);
+            api_tr.find(".update_openapiUser").attr("title", res_data[i].title);
+            api_tr.find(".update_openapiUser").attr("UID", res_data[i].UID);
+            api_tr.find(".update_openapiUser").attr("SECURITY_KEY", res_data[i].SECURITY_KEY);
+            api_tr.find(".update_openapiUser").attr("X_Appid", res_data[i].X_Appid);
+            api_tr.find(".delete_openapiUser").attr("id", res_data[i].id);
+            tr = api_tr.prop("outerHTML");
+            $("#openapiUser_info_part tbody").append(tr);
+        }
+    };
+
+    $("#openapiUser_info_part").on("click", ".delete_openapiUser", function () {
+    id = $(this).attr("id");
+    if (id) {
+        msg = "确定删除？";
+
+        Modal.confirm(
+            {
+                msg: msg
+            }).on(function (e) {
+            // 这里是异步的，有什么操作只能写这里
+            if (e) {
+                url = '/api/delete_openapiUser';
+                params = {
+                        id: id
+                    };
+                $.post(url, params, function (r_data) {
+                    if(r_data.ret){
+                        pop_success("删除成功!");
+                        close_pop_panel();
+                        get_openapiUser();
+                    }
+                    else{
+                        pop_danger(r_data.msg);
+                    }
+                })
+            }
+        });
+    }else {
+        pop_danger("请选择目录！")
+    }
+});
+
+    $("#add_openapiUser").click(function () {
+        $("#add_openUser_title").val("");
+        $("#add_UID").val("");
+        $("#add_SECURITY_KEY").val("");
+        $("#add_X_Appid").val("");
+
+        $("#add_openapiUser_panel").show();
+        open_zhe();
+    });
+
+    $("#add_openapiUser_submit").click(function () {
+
+        title = $("#add_openUser_title")    .val();
+        UID = $("#add_UID").val();
+        SECURITY_KEY = $("#add_SECURITY_KEY").val();
+        X_Appid = $("#add_X_Appid").val();
+
+        if(!title){
+            pop_danger("请输入标题!");
+            return
+        }
+
+        url = '/api/add_openapiUser';
+        params = {
+            title: title,
+            UID: UID,
+            SECURITY_KEY: SECURITY_KEY,
+            X_Appid: X_Appid
+        };
+
+        $.post(url, params, function (r_data) {
+            if(r_data.ret){
+                pop_success("新增成功!");
+                close_pop_panel();
+                get_openapiUser();
+            }
+            else{
+                pop_danger(r_data.msg);
+            }
+        })
+
+    });
+
+    $("#openapiUser_info_part").on("click", ".update_openapiUser", function () {
+        id = $(this).attr("id");
+        if (id) {
+            $("#update_openUser_title").val($(this).attr("title"));
+            $("#update_UID").val($(this).attr("UID"));
+            $("#update_SECURITY_KEY").val($(this).attr("SECURITY_KEY"));
+            $("#update_X_Appid").val($(this).attr("X_Appid"));
+
+            $("#update_openapiUser_submit").attr("user_id", id);
+            $("#update_openapiUser_panel").show();
+            open_zhe();
+        }else {
+            pop_danger("请选择用户!")
+        }
+    });
+
+    $("#update_openapiUser_submit").click(function () {
+
+        id = $(this).attr("user_id");
+        title = $("#update_openUser_title").val();
+        UID = $("#update_UID").val();
+        SECURITY_KEY = $("#update_SECURITY_KEY").val();
+        X_Appid = $("#update_X_Appid").val();
+
+        if(!id){
+            pop_danger("请选择接口!!");
+            return
+        }
+        if(!title){
+            pop_danger("请输入标题!");
+            return
+        }
+
+        url = '/api/update_openapiUser';
+        params = {
+            id:id,
+            title: title,
+            UID: UID,
+            SECURITY_KEY: SECURITY_KEY,
+            X_Appid: X_Appid
+        };
+
+        console.log(params);
+
+        $.post(url, params, function (r_data) {
+            if(r_data.ret){
+                pop_success("更新成功!");
+                close_pop_panel();
+                get_openapiUser()
+            }
+            else{
+                pop_danger(r_data.msg);
+            }
+        })
+    });
+
+
+    get_user_info();
+
+    get_openapiUser();
+
+    $("#header_middle").html("用户");
+
+</script>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>报表任务</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap-treeview.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/pagination.css">
+
+    <script src="/static/js/pub/jquery-3.3.1.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+    <script src="/static/js/pub/pagination.js"></script>
+
+</head>
+<style>
+    .Main{
+        width: 95%;
+        margin: auto;
+    }
+    .main{
+        width: 100%;
+        margin-top: 20px;
+    }
+    #test_task_info_part thead{
+        font-weight: bold;
+    }
+    #test_task_info_part{
+        margin-top: 5px;
+    }
+    #test_task_detail_panel .panel-body{
+        height: 580px;
+        overflow-y: auto;
+    }
+    #add_test_task_panel .panel-body tr td:first-child, #test_task_detail_panel .panel-body tr td:first-child{
+        text-align: right;
+    }
+    #add_test_task_panel .panel-body, #update_test_task_panel .panel-body, test_task_detail_panel .panel-body{
+        height: 500px;
+        overflow-y: auto;
+    }
+    .test_content{
+{#        width: inherit;#}
+        max-width: 300px;
+{#        overflow-x: auto;#}
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+    .width_200{
+        max-width: 200px;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+</style>
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div class="pop_panels">
+
+    {# 新增测试任务框 #}
+    <div id="add_test_task_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">新增测试任务</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody data="123">
+                        <tr>
+                            <td class="center" width="25%"><span style="color: red;">* </span>任务名称</td>
+                            <td width="50%">
+                                <input type="text" class="form-control title">
+                            </td>
+                        </tr>
+                        <tr disabled="disabled">
+                            <td class="center">任务描述</td>
+                            <td>
+                                <input type="text" class="form-control task_desc">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>测试类型:</td>
+                            <td>
+                                <select class="form-control test_type">
+                                    <option value="场景测试">场景测试</option>
+                                    <option value="全量测试">全量测试</option>
+                                    <option value="冒烟测试">冒烟测试</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>所属项目:</td>
+                            <td>
+                                <select class="form-control project"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">
+                                <span style="color: red;">* </span>
+                                <a href="/admin/api/globalenv/" target="_blank">选择全局环境:</a>
+                            </td>
+                            <td>
+                                <div class="global_env_checkbox"></div>
+                            </td>
+                        </tr>
+{#                        <tr>#}
+{#                            <td class="center"><span style="color: red;">* </span>选择全局域名:</td>#}
+{#                            <td>#}
+{#                                <select class="form-control global_host"></select>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td class="center"><span style="color: red;">* </span>选择全局变量:</td>#}
+{#                            <td>#}
+{#                                <select class="form-control global_variable"></select>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td class="center"><span style="color: red;">* </span>选择全局请求头:</td>#}
+{#                            <td>#}
+{#                                <select class="form-control global_header"></select>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td class="center"><span style="color: red;">* </span>选择全局cookie:</td>#}
+{#                            <td>#}
+{#                                <select class="form-control global_cookie"></select>#}
+{#                            </td>#}
+{#                        </tr>#}
+                        <tr class="group_tr" hidden>
+                            <td class="center"><span style="color: red;">* </span>分组id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个分组id用","分隔; 与测试接口必填一项'
+                                       class="form-control group_ids">
+                            </td>
+                        </tr>
+                        <tr class="api_tr" hidden>
+                            <td class="center"><span style="color: red;">* </span>接口id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个接口id用","分隔; 与测试分组必填一项'
+                                       class="form-control api_ids">
+                            </td>
+                        </tr>
+                        <tr class="case_tr">
+                            <td class="center"><span style="color: red;">* </span>用例id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个用例id用","分隔;'
+                                       class="form-control case_ids">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">cron表达式:</td>
+                            <td>
+                                <input type="text" placeholder='秒 分 时 天 月 周'
+                                       class="form-control cron">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">企业微信用户组接收报告:</td>
+                            <td>
+                                <select class="form-control workwx_user_group"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">企业微信群接收报告:</td>
+                            <td>
+                                <select class="form-control workwx_group_chat"></select>
+                            </td>
+{#                            <td class="center">企业微信接收报告:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control receive_workwx"#}
+{#                                placeholder='选填, 使用mis账号，用"|"分隔，例如:guojing02|cuiyongjian'>#}
+{#                            </td>#}
+                        </tr>
+
+                        <tr>
+                            <td class="center">邮箱用户组接收报告:</td>
+                            <td>
+                                <select class="form-control email_user_group"></select>
+                            </td>
+{#                            <td class="center">邮箱接收报告:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control email_user_group"#}
+{#                           placeholder='选填, 邮箱账号用","分隔，例如：guojing02@Qding.me,cuiyongjian@Qding.me'>#}
+{#                            </td>#}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-info close_pop_panel">返回</button>
+                <button type="button" class="btn btn-primary" id="add_test_task_submit">新增</button>
+            </div>
+        </div>
+    </div>
+
+    {# 编辑测试任务框 #}
+    <div id="update_test_task_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">编辑测试任务</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>任务名称</td>
+                            <td>
+                                <input type="text" class="form-control title">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">任务描述</td>
+                            <td>
+                                <input type="text" class="form-control task_desc">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>测试类型:</td>
+                            <td>
+                                <select class="form-control test_type">
+                                    <option value="场景测试">场景测试</option>
+                                    <option value="全量测试">全量测试</option>
+                                    <option value="冒烟测试">冒烟测试</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>所属项目:</td>
+                            <td>
+                                <select class="form-control project"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">
+                                <span style="color: red;">* </span>
+                                <a href="/admin/api/globalenv/" target="_blank">选择全局环境:</a>
+                            </td>
+                            <td>
+                                <div class="global_env_checkbox"></div>
+                            </td>
+                        </tr>
+                        <tr class="group_tr">
+                            <td class="center"><span style="color: red;">* </span>分组id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个分组id用","分隔; 与测试接口必填一项'
+                                       class="form-control group_ids">
+                            </td>
+                        </tr>
+                        <tr class="api_tr">
+                            <td class="center"><span style="color: red;">* </span>接口id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个接口id用","分隔; 与测试分组必填一项'
+                                       class="form-control api_ids">
+                            </td>
+                        </tr>
+                        <tr class="case_tr">
+                            <td class="center"><span style="color: red;">* </span>用例id:</td>
+                            <td>
+                                <input type="text" placeholder='选填!  多个用例id用","分隔;'
+                                       class="form-control case_ids">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">cron表达式:</td>
+                            <td>
+                                <input type="text" placeholder='秒 分 时 天 月 周'
+                                       class="form-control cron">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>企业微信用户组接收报告:</td>
+                            <td>
+                                <select class="form-control workwx_user_group"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>企业微信群接收报告:</td>
+                            <td>
+                                <select class="form-control workwx_group_chat"></select>
+                            </td>
+{#                            <td class="center">企业微信接收报告:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control receive_workwx"#}
+{#                                placeholder='选填, 使用mis账号，用"|"分隔，例如:guojing02|cuiyongjian'>#}
+{#                            </td>#}
+                        </tr>
+
+                        <tr>
+                            <td class="center"><span style="color: red;">* </span>邮箱用户组接收报告:</td>
+                            <td>
+                                <select class="form-control email_user_group"></select>
+                            </td>
+{#                            <td class="center">邮箱接收报告:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control email_user_group"#}
+{#                           placeholder='选填, 邮箱账号用","分隔，例如：guojing02@Qding.me,cuiyongjian@Qding.me'>#}
+{#                            </td>#}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-info close_pop_panel">返回</button>
+                <button type="button" class="btn btn-primary" id="update_test_task_submit">更新</button>
+            </div>
+        </div>
+    </div>
+
+    {# 测试任务详情框 #}
+    <div id="test_task_detail_panel" class="pop_panel" style="display: none;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span id="panel-title" style="text-align: center">任务详情</span>
+                    <button type="button" class="close close_pop_panel" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>下次执行时间:</td>
+                            <td>
+                                <input type="text" class="form-control next_run_time" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>任务名称:</td>
+                            <td>
+                                <input type="text" class="form-control title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>任务描述:</td>
+                            <td>
+                                <input type="text" class="form-control task_desc" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>测试类型:</td>
+                            <td>
+                                <input type="text" class="form-control test_type" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">全局域名:</td>
+                            <td>
+                                <input type="text" class="form-control global_host_title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>所属项目:</td>
+                            <td>
+                                <input type="text" class="form-control project_title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">全局环境:</td>
+                            <td>
+                                <textarea class="form-control global_env" readonly></textarea>
+                            </td>
+                        </tr>
+{#                        <tr>#}
+{#                            <td class="center">全局变量:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control global_variable_title" readonly>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td class="center">全局请求头:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control global_header_title" readonly>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <td class="center">全局cookie:</td>#}
+{#                            <td>#}
+{#                                <input type="text" class="form-control global_cookie_title" readonly>#}
+{#                            </td>#}
+{#                        </tr>#}
+                        <tr>
+                            <td>分组id:</td>
+                            <td>
+                                <input type="text" class="form-control group_ids" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>接口id:</td>
+                            <td>
+                                <input type="text" class="form-control api_ids" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>用例id:</td>
+                            <td>
+                                <input type="text" class="form-control case_ids" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>cron表达式:</td>
+                            <td>
+                                <input type="text" class="form-control cron" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>企业微信用户组id:</td>
+                            <td>
+                                <input type="text" class="form-control workwx_user_group_id" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>企业微信用户组名称:</td>
+                            <td>
+                                <input type="text" class="form-control workwx_user_group_title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>企业微信群id:</td>
+                            <td>
+                                <input type="text" class="form-control workwx_group_chat_id" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>企业微信群名称:</td>
+                            <td>
+                                <input type="text" class="form-control workwx_group_chat_title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>邮箱用户组id:</td>
+                            <td>
+                                <input type="text" class="form-control email_user_group_id" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>邮箱用户组名称:</td>
+                            <td>
+                                <input type="text" class="form-control email_user_group_title" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>最后更新人:</td>
+                            <td>
+                                <input type="text" class="form-control latest_update_user" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>最后更新人id:</td>
+                            <td>
+                                <input type="text" class="form-control latest_update_user_id" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>修改时间:</td>
+                            <td>
+                                <input type="text" class="form-control u_date" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>创建时间:</td>
+                            <td>
+                                <input type="text" class="form-control c_date" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>测试详情:</td>
+                            <td>
+                                <textarea class="form-control test_content_detail textarea_h300" readonly></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer" style="text-align: right">
+                <button type="button" class="btn btn-info close_pop_panel">返回</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="Main">
+
+    <div class="">
+
+        <div class="main">
+            <div style="height: 40px;">
+                <div class="fl">
+                    <a href="/admin/api/reportform/"><button type="button" class="btn btn-info" value="">管理</button></a>
+                </div>
+            </div>
+            <table id="test_task_info_part" class="table table-bordered table-striped table-hover" style="font-size: 13px">
+                <thead>
+                    <tr class="bg_color1">
+                        <td style="max-width: 5%">id</td>
+                        <td style="max-width: 10%">任务名称</td>
+                        <td style="max-width: 30%">测试内容</td>
+
+                        <td style="max-width: 10%">接收人</td>
+                        <td style="max-width: 10%">接收群</td>
+
+                        <td style="max-width: 8%">cron表达式</td>
+                        <td style="max-width: 10%">下次执行时间</td>
+                        <td style="max-width: 20%">操作</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div id="page_div" style="text-align: center">
+{#                <div id="pagination"></div> #}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script type="text/javascript" src="/static/js/api/test_task.js"></script>
+</html>

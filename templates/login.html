@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>用户登陆</title>
+
+<link rel="stylesheet" type="text/css" href="/static/css/login.css">
+
+<script type="text/javascript" src="/static/js/pub/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/pub/vector.js"></script>
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+
+</head>
+<body>
+
+<div id="container">
+	<div id="output">
+		<div class="containerT">
+			<h1>接 口 自 动 化 测 试 平 台</h1>
+			<form class="form" id="login_form" enctype="multipart/form-data">
+                {% csrf_token %}
+				<input type="text" placeholder="用户名" id="user" maxlength="16" name="user">
+				<input type="password" placeholder="密码" id="pw" maxlength="16" name="pw">
+{#				<input type="text" placeholder="用户名" id="user1" value="admin">#}
+{#				<input type="password" placeholder="密码" id="pw1">#}
+				<button type="button" id="login" >登录</button>
+				<div id="prompt" class="prompt"></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        {#Victor("container", "output");   // 登录背景函数#}
+        $("#user").focus();
+        $(document).keydown(function(event){
+            if(event.keyCode==13){
+                $("#login").click();    // 回车键=登陆
+            }
+        });
+        $("#login").click(function () {
+            var res_data = send_login_verify($('#login_form').serialize());
+            if (res_data.ret){
+                $("#prompt").html("登陆成功!");
+                // window.location.href = "/html/api/home"
+                window.location.href = "/html/api/welcome?index_flag=1"
+            }
+            else {
+                console.log(res_data)
+                $("#prompt").html(res_data.msg);
+            }
+
+        });
+    });
+</script>
+</body>
+</html>

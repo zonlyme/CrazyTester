@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>测试报告</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+
+    <script src="/static/js/pub/jquery.min.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+
+</head>
+
+<style>
+    .main{
+        margin-top: 20px;
+    }
+    .center th{
+        text-align: center;
+    }
+    #detail_div{   /* 查看用例详情框*/
+        position: fixed;
+        width: 90%;
+        top: 5%;
+        left: 5%;
+        height: 90%;
+        z-index: 9;
+        text-align: left;
+        background-color: white;
+        display: none;
+    }
+</style>
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div class="wrap">
+
+<div class="pop">
+    <div id="detail_div" class="panel panel-default pop_panel">
+        <div class="panel-heading" style="height: 5%;">
+            <h3 class="panel-title">
+                <span id="panel-title" style="text-align: center" class="case_detail_title">详情数据</span>
+                <button type="button" class="close close_pop_panel" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </h3>
+        </div>
+        <div class="panel-body" style="height: 88%; overflow-y: scroll">
+            <div id="case_info_table" style="height: auto; "></div>
+            <h4><a href="" id="dl">下载excel文件</a></h4>
+            <h4 style="color: red" id="error_msg_h4">错误信息：<span id="error_msg"></span></h4>
+            <br>
+            <table id="case_detail_data_table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class="bg_color3" width="50%"><strong>表数据(json格式)</strong></th>
+                    <th class="bg_color3" width="50%"><strong>库数据(json格式)</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <textarea id="form_data" class="form-control textarea_h400" readonly></textarea>
+                    </td>
+                    <td>
+                        <textarea id="db_data" class="form-control textarea_h400" readonly></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table id="case_detail_data_table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class="bg_color3" width="100%"><strong>日志</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <textarea id="log" class="form-control textarea_h400" readonly></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer" style="height: 7%;text-align: right">
+            <button type="button" class="btn btn-primary close_pop_panel">返回</button>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="report_info center" id="report_info">
+        <table id="report_info_table" class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg_color1 center">
+                    <th>报表名称</th>
+                    <th>测试环境</th>
+                    <th>同步类型</th>
+                    <th>执行结果</th>
+                    <th>执行方式</th>
+                    <th>执行时间</th>
+                    <th>操作</th>
+{#                    <th width="16%">报表名称</th>#}
+{#                    <th width="12%">测试环境</th>#}
+{#                    <th width="8%">同步类型</th>#}
+{#                    <th width="8%">执行结果</th>#}
+{#                    <th width="8%">执行方式</th>#}
+{#                    <th width="12%">执行时间</th>#}
+{#                    <th width="8%">操作</th>#}
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script>
+
+var tr_html_raw = function () {
+/*
+    <tr>
+        <td class="title"></td>
+        <td class="env"></td>
+        <td class="sync_type"></td>
+        <td class="test_ret"></td>
+        <td class="trigger_way"></td>
+        <td class="test_date"></td>
+        <td>
+            <button type="button" class="btn btn-info result">查看报告</button>
+        </td>
+    </tr>
+*/
+};
+
+
+var set_report_list = function (data) {
+    $("#report_info_table tbody").html("");
+    for(i in data){
+        var tr_html = $(tr_html_raw.getMultiLine());
+        tr_html.find(".title").html(data[i].title);
+        tr_html.find(".env").html(data[i].env);
+        tr_html.find(".sync_type").html(data[i].sync_type);
+        var test_ret = "";
+        if(data[i].test_ret){
+            test_ret = '<span class="label label-info">成功</span>'
+        }else{
+            test_ret = '<span class="label label-warning">失败</span>'
+        }
+        tr_html.find(".test_ret").html(test_ret);
+        tr_html.find(".trigger_way").html(data[i].trigger_way);
+        tr_html.find(".test_date").html(data[i].c_date);
+
+        tr_html.find(".result").attr("task_id",data[i].id);
+        $("#report_info_table tbody").append(tr_html)
+    }
+};
+
+var get_result_list = function () {
+    var params = {
+        rf_id: getUrlQueryString("rf_id"),
+    };
+    var res_data = send_get_rf_result_list(params);
+    if (res_data.ret) {
+        if(res_data.datas.length > 0){
+            set_report_list(res_data.datas);
+        }
+        else{
+            pop_danger("无数据！")
+        }
+    }
+};
+
+
+// 场景测试，弹出对应用例的用例详情
+$("#report_info").on("click", ".result", function () {
+    var rf_result_id = $(this).attr("task_id");
+    var params = {
+        rf_result_id: rf_result_id
+    };
+    var res_data = send_get_rf_result_detail(params);
+    if (res_data.ret) {
+        $("#db_data").html("").html(res_data.data.db_data);
+        $("#form_data").html("").html(res_data.data.form_data);
+        $("#log").html("").html(res_data.data.log);
+
+        if (res_data.data.file_path){
+            $("#dl").attr("href", "/api/download/" + res_data.data.file_path);
+            $("#dl").show()
+        }
+        else{
+            $("#dl").hide()
+        }
+        if (res_data.data.error_msg){
+            $("#error_msg").html("").html(res_data.data.error_msg);
+            $("#error_msg_h4").show("")
+        }
+        else{
+            $("#error_msg_h4").hide("")
+        }
+
+        $("#detail_div").show();
+        open_zhe();
+    }
+});
+
+set_header_middle("报表对比结果")
+
+get_result_list();
+
+</script>
+
+</html>

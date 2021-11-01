@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>测试报告</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/pub/bootstrap.css">
+
+    <script src="/static/js/pub/jquery.min.js"></script>
+    <script src="/static/js/pub/popper.min.js"></script>
+    <script src="/static/js/pub/bootstrap.js"></script>
+
+</head>
+
+<style>
+    .main{
+        margin-top: 20px;
+    }
+    .center th{
+        text-align: center;
+    }
+</style>
+
+<body>
+
+<script src="/static/js/pub/tools.js"></script>
+
+<div class="wrap">
+
+<div class="main">
+    <div class="report_info center" id="report_info">
+        <table id="report_info_table" class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg_color1 center">
+                    <th width="16%">任务名称</th>
+                    <th width="12%">全局环境</th>
+                    <th width="8%">测试类型</th>
+                    <th width="8%">执行结果</th>
+                    <th width="8%">执行方式</th>
+                    <th width="10%">发送企微用户组</th>
+                    <th width="10%">发送企微群</th>
+                    <th width="8%">发送邮件</th>
+                    <th width="12%">执行时间</th>
+                    <th width="8%">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="/static/js/pub/pub.js"></script>
+<script>
+
+var tr_html_raw = function () {
+/*
+    <tr>
+        <td class="task_title"></td>
+        <td class="global_env"></td>
+        <td class="test_type"></td>
+        <td class="test_ret"></td>
+        <td class="trigger_way"></td>
+        <td class="send_workwx_user_group_flag"></td>
+        <td class="send_workwx_group_chat_flag"></td>
+        <td class="send_email_flag"></td>
+        <td class="test_date"></td>
+        <td>
+            <button type="button" class="btn btn-info">
+                <a href="" class="report" target="_blank">查看报告</a>
+            </button>
+        </td>
+    </tr>
+*/
+};
+
+// 弹出对应所有失败用例信息
+$("#api_info").on("click", "#get_case_detail", function () {
+    var task_id = $(this).attr("task_id");
+    var api_id = $(this).attr("api_id");
+    var params = {
+        task_id: task_id,
+        api_id: api_id
+    };
+    var res_data = send_get_case_detail(params);
+    if (res_data.ret) {
+        set_fail_case_detail(data.datas);
+        $("#case_detail_div").show();
+        open_zhe();
+    }
+});
+
+
+// 报告详情跳转时，改变url地址
+{#$("#report_info_table").on("click", ".report", function () {#}
+{#    var u = add_url_params("index_flag", "1", $(this).attr("href"))#}
+{#    window.history.pushState(null,null,u);#}
+{#});#}
+
+
+var set_report_list = function (data) {
+    $("#report_info_table tbody").html("");
+    for(i in data){
+        var tr_html = $(tr_html_raw.getMultiLine());
+        tr_html.find(".task_title").html(data[i].title);
+        tr_html.find(".global_env").html('<a href="/admin/api/globalenv/{0}/change/">{1}</a>'.format(data[i].global_env_id, data[i].global_env_title));
+        tr_html.find(".test_type").html(data[i].test_type);
+        var test_ret = "";
+        if(data[i].test_ret){
+            test_ret = '<span class="label label-info test_ret">成功</span>'
+        }else{
+            test_ret = '<span class="label label-warning test_ret">失败</span>'
+        }
+        tr_html.find(".test_ret").html(test_ret);
+        tr_html.find(".trigger_way").html(data[i].trigger_way);
+
+        var send_workwx_user_group_flag;
+        if (data[i].send_workwx_user_group_flag === null){
+            send_workwx_user_group_flag = data[i].send_workwx_user_group_msg;
+        }
+        else if(data[i].send_workwx_user_group_flag){
+            send_workwx_user_group_flag = '<span class="label label-info test_ret">成功</span>'
+        }else{
+            send_workwx_user_group_flag = '<span class="label label-warning test_ret">失败</span>'
+        }
+
+        var send_workwx_group_chat_flag;
+        if (data[i].send_workwx_group_chat_flag === null){
+            send_workwx_group_chat_flag = data[i].send_workwx_group_chat_msg;
+        }
+        else if(data[i].send_workwx_group_chat_flag){
+            send_workwx_group_chat_flag = '<span class="label label-info test_ret">成功</span>'
+        }else{
+            send_workwx_group_chat_flag = '<span class="label label-warning test_ret">失败</span>'
+        }
+
+        var send_email_flag;
+        if (data[i].send_email_flag === null){
+            send_email_flag = data[i].send_email_msg;
+        }
+        else if(data[i].send_email_flag){
+            send_email_flag = '<span class="label label-info test_ret">成功</span>'
+        }else{
+            send_email_flag = '<span class="label label-warning test_ret">失败</span>'
+        }
+
+        tr_html.find(".send_workwx_user_group_flag").html(send_workwx_user_group_flag);
+        tr_html.find(".send_workwx_user_group_flag").attr("title", data[i].send_workwx_user_group_msg);
+
+        tr_html.find(".send_workwx_group_chat_flag").html(send_workwx_group_chat_flag);
+        tr_html.find(".send_workwx_group_chat_flag").attr("title", data[i].send_workwx_group_chat_msg);
+
+        tr_html.find(".send_email_flag").html(send_email_flag);
+        tr_html.find(".send_email_flag").attr("title", data[i].send_email_msg);
+
+        tr_html.find(".test_date").html(data[i].c_date);
+
+        tr_html.find(".report").attr("href","/html/api/test_report?index_flag=1&id="+data[i].id);
+        $("#report_info_table tbody").append(tr_html)
+    }
+};
+
+var get_report_list = function () {
+    var params = {
+        task_id: getUrlQueryString("task_id"),
+        task_group_id: getUrlQueryString("task_group_id")
+    };
+    var res_data = send_get_report_list(params);
+    if (res_data.ret) {
+        if(res_data.data.length > 0){
+            set_report_list(res_data.data);
+        }
+        else{
+            pop_danger("暂无数据！")
+        }
+    }
+};
+
+set_header_middle("报告列表")
+
+get_user_info();
+
+get_report_list();
+
+</script>
+
+</html>
