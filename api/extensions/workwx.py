@@ -8,10 +8,6 @@ import time
     企业微信开放api
 """
 
-# corpid = "wwcaca99303b016ebc"   # 公司id
-# corpsecret = "IdrI0KP2mbhV2GA_jiFfU4eQ9GgGWroBCRqKX0KRvfE"  # 应用的凭证密钥
-# agentid = "1000014"    # 应用id
-
 
 class WorkWeixinApi:
 
